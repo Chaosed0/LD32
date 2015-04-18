@@ -3,7 +3,8 @@ require(['jquery', './Util', './GameObj',
         './StatDisplay',
         './ActionDisplay',
         './BombProgress',
-        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress) {
+        './ContinentStats',
+        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, ContinentStats) {
 
     var self = this;
 
@@ -41,16 +42,7 @@ require(['jquery', './Util', './GameObj',
     }
 
     for (var i = 0; i < continents.length; i++) {
-        var stats = {
-            strength: Math.floor(u.getRandom(0, 10)),
-            stability: Math.floor(u.getRandom(90, 100)),
-            science: Math.floor(u.getRandom(1, 3)),
-            progress: 0,
-            hasAgents: false,
-            hasSquad: false,
-            wars: []
-        }
-        continentStats.push(stats);
+        continentStats.push(new ContinentStats());
     }
 
     for (var i = 0; i < continents.length; i++) {
@@ -70,6 +62,38 @@ require(['jquery', './Util', './GameObj',
         }
     }
 
+    var nextMonth = function() {
+        playerStats.progress += playerStats.science;
+        for (var i = 0; i < continents.length; i++) {
+            var stats = continentStats[i];
+
+            /* Add progress on bomb if our agents aren't present */
+            if (!stats.hasAgents) {
+                stats.progress += stats.science;
+            }
+
+            /* Calculate impact of wars on stability */
+            for (var j = 0; j < stats.wars.length; j++) {
+                if (stats.wars[j]) {
+                    var relativeStrength = stats.getEffectiveStrength() - continentStats[j].getEffectiveStrength();
+                    /* If relativeStrength is less than zero and the country
+                     * has one of our squads defending it, don't subtract */
+                    if (!stats.hasSquad || relativeStrength > 0) {
+                        stats.stability += relativeStrength;
+                    }
+                }
+            }
+        }
+
+        /* Add to strength only after we're done calculating war effects */
+        for (var i = 0; i < continents.length; i++) {
+            var stats = continentStats[i];
+            stats.strength += Math.floor(u.getRandom(stats.science/2, stats.science));
+        }
+
+        $(window).trigger("NewMonth");
+    }
+
     var width = $(window).width();
     var height = $(window).height();
 
@@ -87,6 +111,25 @@ require(['jquery', './Util', './GameObj',
     var actionDisplay = new ActionDisplay();
     var bombProgress = new BombProgress(true, playerStats.progress);
     var continentBombProgress = null;
+    var selectedContinent = null;
+
+    var displayUI = function(continent) {
+        selectedContinent = continent;
+        continentStatDisplay.displayStats(continents, continentStats, continent);
+        actionDisplay.displayActions(continentStats[continent], playerStats, function() {
+            /* Re-display UI if an action is taken */
+            displayUI(continent);
+        });
+        continentStatDisplay.visible(true);
+        actionDisplay.visible(true);
+
+        if (continentBombProgress !== null) {
+            continentBombProgress.destroy();
+        }
+        continentBombProgress = new BombProgress(false, continentStats[continent].progress, continents[continent]);
+        $(window).unbind('NewMonth');
+        $(window).on('NewMonth', function() { displayUI(continent); });
+    };
 
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
@@ -110,18 +153,7 @@ require(['jquery', './Util', './GameObj',
 
         (function() {
             var index = i;
-            var displayUI = function() {
-                continentStatDisplay.displayStats(continents, continentStats, index);
-                actionDisplay.displayActions(continentStats[index], playerStats, displayUI);
-                continentStatDisplay.visible(true);
-                actionDisplay.visible(true);
-
-                if (continentBombProgress !== null) {
-                    continentBombProgress.destroy();
-                }
-                continentBombProgress = new BombProgress(false, continentStats[index].progress, continents[index]);
-            };
-            label.mousedown(displayUI);
+            label.mousedown(function() { displayUI(index); });
         })();
 
         $('body').append(label);
@@ -138,5 +170,6 @@ require(['jquery', './Util', './GameObj',
     nextMonthButton.height(50);
     nextMonthButton.setPos($(window).width() - nextMonthButton.width() - 20,
                            $(window).height() - nextMonthButton.height() - 20);
+    nextMonthButton.click(nextMonth);
     $('body').append(nextMonthButton);
 });

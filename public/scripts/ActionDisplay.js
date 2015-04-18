@@ -7,7 +7,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
     var ActionDisplay = function() {
         this.elem.css({
             'width': '250px',
-            'height': '150px',
+            'height': '170px',
         });
         this.elem.setPos(20, $(window).height() - this.elem.height() - 20);
     }
@@ -16,7 +16,8 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
 
     ActionDisplay.prototype.displayActions = function(continentStats, playerStats, onAction) {
         this.elem.empty();
-        this.elem.append('<h1>Actions</h1>');
+        this.elem.append('<h1>X-MOC HQ</h1>');
+        this.elem.append($('<p/>').text('Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads));
         var self = this;
         var agentsButton = $('<button type="button"/>');
         var squadButton = $('<button type="button"/>');

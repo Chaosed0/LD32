@@ -13,12 +13,13 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
     StatDisplay.prototype = new UIElem();
     StatDisplay.prototype.constructor = StatDisplay;
 
-    StatDisplay.prototype.displayStats = function(continents, stats, index) {
+    StatDisplay.prototype.displayStats = function(continents, continentStats, index) {
         this.elem.empty();
+        var stats = continentStats[index];
 
-        var strengthText = 'Strength: ' + stats[index].strength;
-        var stabilityText = 'Stability: ' + stats[index].stability;
-        if (stats[index].hasSquad) {
+        var strengthText = 'Strength: ' + stats.strength;
+        var stabilityText = 'Stability: ' + stats.stability;
+        if (stats.hasSquad) {
             strengthText += ' (+5)';
         }
 
@@ -26,16 +27,16 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
         this.elem.append($('<p/>').text(strengthText));
         this.elem.append($('<p/>').text(stabilityText));
 
-        if (stats[index].hasAgents) {
+        if (stats.hasAgents) {
             this.elem.append($('<p/>').text('Agents deployed on this continent.'));
         }
 
-        if (stats[index].hasSquad) {
+        if (stats.hasSquad) {
             this.elem.append($('<p/>').text('Squadron deployed on this continent.'));
         }
 
         this.elem.append('<h2>Wars</h2>');
-        var wars = stats[index].wars;
+        var wars = stats.wars;
         var atWar = false;
         for (var i = 0; i < wars.length; i++) {
             if (!wars[i]) {
@@ -43,7 +44,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             }
             atWar = true;
 
-            var relativeStrength = stats[index].strength - stats[i].strength;
+            var relativeStrength = stats.getEffectiveStrength() - continentStats[i].getEffectiveStrength();
 
             var label = $('<p/>').text(continents[i] + ' (' + relativeStrength + ')');
             label.css('color', (relativeStrength >= 0 ? goodWarColor : badWarColor));
