@@ -44,7 +44,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             squadButton.text("Withdraw squadron");
             squadButton.click(function() {
                 continentStats.hasSquad = false;
-                playerStats.squad++;
+                playerStats.squads++;
                 onAction();
             });
         } else if (playerStats.squads <= 0) {

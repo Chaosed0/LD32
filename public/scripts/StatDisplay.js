@@ -15,16 +15,23 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
 
     StatDisplay.prototype.displayStats = function(continents, stats, index) {
         this.elem.empty();
-        this.elem.append('<h1>' + continents[index] + '</h1>');
-        this.elem.append('<p>Strength: ' + stats[index].strength + '</p>');
-        this.elem.append('<p>Stability: ' + stats[index].stability + '</p>');
 
-        if (stats.hasAgents) {
-            this.elem.append('<p>Agents deployed on this continent.</p>');
+        var strengthText = 'Strength: ' + stats[index].strength;
+        var stabilityText = 'Stability: ' + stats[index].stability;
+        if (stats[index].hasSquad) {
+            strengthText += ' (+5)';
         }
 
-        if (stats.hasSquad) {
-            this.elem.append('<p>Squadron deployed on this continent.</p>');
+        this.elem.append('<h1>' + continents[index] + '</h1>');
+        this.elem.append($('<p/>').text(strengthText));
+        this.elem.append($('<p/>').text(stabilityText));
+
+        if (stats[index].hasAgents) {
+            this.elem.append($('<p/>').text('Agents deployed on this continent.'));
+        }
+
+        if (stats[index].hasSquad) {
+            this.elem.append($('<p/>').text('Squadron deployed on this continent.'));
         }
 
         this.elem.append('<h2>Wars</h2>');
