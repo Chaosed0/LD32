@@ -19,7 +19,7 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
         bombProgress.css({'width': $(window).width() - leftPadding - rightPadding,
                           'height': 20});
         if (isMain) {
-            bombProgress.setPos(leftPadding, $(window).height() - 20 - 20);
+            bombProgress.setPos(leftPadding, $(window).height() - bombProgress.height() - 20);
             progressLabel.setPos(leftPadding, $(window).height() - 60);
         } else {
             bombProgress.setPos(leftPadding, 20);

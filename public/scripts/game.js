@@ -74,10 +74,12 @@ require(['jquery', './Util', './GameObj',
     var height = $(window).height();
 
     var map = GameObj('#map');
-    var ratio = Math.min(width / map[0].clientWidth, height / map[0].clientHeight);
+    var mapWidth = map.width();
+    var mapHeight = map.height();
+    var ratio = Math.min(width / mapWidth, height / mapHeight);
     console.log(ratio);
-    map.width(map.width() * ratio);
-    map.height(map.height() * ratio);
+    map.width(mapWidth * ratio);
+    map.height(mapHeight * ratio);
     map.setPos((width - map.width())/2.0, (height - map.height())/2.0);
     map.css('z-index', -1000);
 
@@ -125,8 +127,16 @@ require(['jquery', './Util', './GameObj',
         $('body').append(label);
         label.width(label.width()*1.5);
         label.height(label.height()*3);
-        label.setPos(map.position.x + map.width() * position.x - label[0].clientWidth/2,
-                     map.position.y + map.height() * position.y - label[0].clientHeight/2);
+        label.setPos(map.position.x + map.width() * position.x - label.width()/2,
+                     map.position.y + map.height() * position.y - label.height()/2);
         labels.push(label);
     }
+
+    var nextMonthButton = GameObj('<button type="button"/>');
+    nextMonthButton.text("Commit Strategy");
+    nextMonthButton.width(150);
+    nextMonthButton.height(50);
+    nextMonthButton.setPos($(window).width() - nextMonthButton.width() - 20,
+                           $(window).height() - nextMonthButton.height() - 20);
+    $('body').append(nextMonthButton);
 });

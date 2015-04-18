@@ -9,7 +9,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             'width': '250px',
             'height': '150px',
         });
-        this.elem.setPos(20, $(window).height() - 20 - 150);
+        this.elem.setPos(20, $(window).height() - this.elem.height() - 20);
     }
     ActionDisplay.prototype = new UIElem();
     ActionDisplay.prototype.constructor = ActionDisplay;
