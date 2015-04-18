@@ -109,14 +109,21 @@ require(['jquery', './Util', './GameObj',
 
     var continentStatDisplay = new StatDisplay();
     var actionDisplay = new ActionDisplay();
-    var bombProgress = new BombProgress(true, playerStats.progress);
+    var ourBombProgress = new BombProgress(true, playerStats.progress);
     var continentBombProgress = null;
     var selectedContinent = null;
 
-    var displayUI = function(continent) {
-        selectedContinent = continent;
-        continentStatDisplay.displayStats(continents, continentStats, continent);
-        actionDisplay.displayActions(continentStats[continent], playerStats, function() {
+    $(window).on('NewMonth', function() {
+        /* Update our bomb progress on a new month */
+        ourBombProgress.setProgress(playerStats.progress);
+    });
+
+    var displayUI = function() {
+        if (selectedContinent === null) {
+            return;
+        }
+        continentStatDisplay.displayStats(continents, continentStats, selectedContinent);
+        actionDisplay.displayActions(continentStats[selectedContinent], playerStats, function() {
             /* Re-display UI if an action is taken */
             displayUI(continent);
         });
@@ -126,10 +133,10 @@ require(['jquery', './Util', './GameObj',
         if (continentBombProgress !== null) {
             continentBombProgress.destroy();
         }
-        continentBombProgress = new BombProgress(false, continentStats[continent].progress, continents[continent]);
-        $(window).unbind('NewMonth');
-        $(window).on('NewMonth', function() { displayUI(continent); });
+        continentBombProgress = new BombProgress(false, continentStats[selectedContinent].progress, continents[selectedContinent]);
     };
+
+    $(window).on('NewMonth', displayUI);
 
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
@@ -153,7 +160,7 @@ require(['jquery', './Util', './GameObj',
 
         (function() {
             var index = i;
-            label.mousedown(function() { displayUI(index); });
+            label.mousedown(function() { selectedContinent = index; displayUI(); });
         })();
 
         $('body').append(label);
