@@ -26,9 +26,9 @@ require(['jquery', './Util', './GameObj',
         { x: 0.19, y: 0.31 },
         { x: 0.3, y: 0.6 },
         { x: 0.525, y: 0.45 },
-        { x: 0.55, y: 0.225 },
+        { x: 0.55, y: 0.235 },
         { x: 0.7, y: 0.3 },
-        { x: 0.85, y: 0.675 },
+        { x: 0.855, y: 0.675 },
     ];
 
     var labels = [];
@@ -228,7 +228,7 @@ require(['jquery', './Util', './GameObj',
         }
     });
 
-    var nextMonthButton = GameObj('<button type="button"/>');
+    var nextMonthButton = GameObj('<button type="button" class="button"/>');
     nextMonthButton.text("Commit Strategy");
     nextMonthButton.width(150);
     nextMonthButton.height(50);

@@ -7,7 +7,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
     var ActionDisplay = function() {
         this.elem.css({
             'width': '250px',
-            'height': '170px',
+            'height': '200px',
         });
         this.elem.setPos(20, $(window).height() - this.elem.height() - 20);
     }
@@ -23,8 +23,8 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             return;
         }
         var self = this;
-        var agentsButton = $('<button type="button"/>');
-        var squadButton = $('<button type="button"/>');
+        var agentsButton = $('<button type="button" class="button"/>');
+        var squadButton = $('<button type="button" class="button"/>');
 
         if (continentStats.hasAgents) {
             agentsButton.text("Withdraw agents");

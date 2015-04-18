@@ -5,11 +5,11 @@ html, body {
 }
 
 h1 {
-    margin-top: 0;
+    margin-top: 0k
 }
 
 .container {
-    outline: 1px solid #005969;
+    outline: 1px solid #006979;
     background-color: #003949;
     color: #ddd;
     padding: 5px;
@@ -31,4 +31,18 @@ h1 {
     align-content: center;
     flex-direction: column;
     display: flex;
+}
+
+.button {
+    outline: 1px solid #006979;
+    background-color: #005969;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+    color: #ddd;
+    border: 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.button:hover {
+    background-color: #006979;
 }
