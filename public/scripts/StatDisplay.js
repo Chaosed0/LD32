@@ -1,5 +1,5 @@
 
-define(['jquery', './Util', './GameObj', './UIElem'], function($, u, GameObj, UIElem) {
+define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
     var StatDisplay = function() {
         this.elem.css({
             'width': '250px',

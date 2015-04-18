@@ -1,11 +1,12 @@
 
 require(['jquery', './Util', './GameObj',
         './StatDisplay',
-        ], function($, u, GameObj, StatDisplay) {
+        './WarDisplay',
+        ], function($, u, GameObj, StatDisplay, WarDisplay) {
 
     var self = this;
 
-    const initialWars = 5;
+    const initialWars = 3;
 
     var continents = [
         'North America',
@@ -46,7 +47,12 @@ require(['jquery', './Util', './GameObj',
     for(var i = 0; i < initialWars; i++) {
         var first = Math.floor(u.getRandom(0, continents.length));
         var second = Math.floor(u.getRandom(0, continents.length));
-        continentWars[first][second] = true;
+        if (first != second && !continentWars[first][second]) {
+            continentWars[first][second] = true;
+            continentWars[second][first] = true;
+        } else {
+            --i;
+        }
     }
 
     var width = $(window).width();
@@ -61,6 +67,7 @@ require(['jquery', './Util', './GameObj',
     map.css('z-index', -1000);
 
     var continentStatDisplay = new StatDisplay();
+    var continentWarDisplay = new WarDisplay();
 
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
@@ -86,7 +93,9 @@ require(['jquery', './Util', './GameObj',
             var index = i;
             label.mousedown(function() {
                 continentStatDisplay.displayStats(continents[index], continentStats[index]);
-                continentStatDisplay.visible('true');
+                continentWarDisplay.displayRelations(continents, continentWars, index);
+                continentStatDisplay.visible(true);
+                continentWarDisplay.visible(true);
             });
         })();
 
