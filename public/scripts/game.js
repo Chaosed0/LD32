@@ -1,10 +1,9 @@
 
 require(['jquery', './Util', './GameObj',
         './StatDisplay',
-        './WarDisplay',
         './ActionDisplay',
         './BombProgress',
-        ], function($, u, GameObj, StatDisplay, WarDisplay, ActionDisplay, BombProgress) {
+        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress) {
 
     var self = this;
 
@@ -83,7 +82,6 @@ require(['jquery', './Util', './GameObj',
     map.css('z-index', -1000);
 
     var continentStatDisplay = new StatDisplay();
-    var continentWarDisplay = new WarDisplay();
     var actionDisplay = new ActionDisplay();
 
     for (var i = 0; i < continents.length; i++) {
@@ -110,10 +108,8 @@ require(['jquery', './Util', './GameObj',
             var index = i;
             var displayUI = function() {
                 continentStatDisplay.displayStats(continents, continentStats, index);
-                continentWarDisplay.displayWars(continents, continentStats, index);
                 actionDisplay.displayActions(continentStats[index], playerStats, displayUI);
                 continentStatDisplay.visible(true);
-                continentWarDisplay.visible(true);
                 actionDisplay.visible(true);
             };
             label.mousedown(displayUI);
