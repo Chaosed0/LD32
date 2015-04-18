@@ -1,5 +1,5 @@
 
-define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
+define(['jquery', './Util'], function($, u) {
     const goodWarColor = '#b00';
     const badWarColor = '#f00';
     const peaceColor = '#0f0';
