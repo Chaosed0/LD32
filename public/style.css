@@ -46,3 +46,30 @@ h1 {
 .button:hover {
     background-color: #006979;
 }
+
+progress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border:none;
+    color: #005969;
+    background: #ddd;
+}
+
+progress::-moz-progress-bar {
+    background: #005969;
+}
+
+progress::-webkit-progress-value {
+    background: #005969;
+}
+
+progress::-webkit-progress-value::before {
+    position: absolute;
+    right: 0;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+
+progress::-webkit-progress-bar {
+    background: #ddd;
+}

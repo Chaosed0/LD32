@@ -13,8 +13,11 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
             progressText = continent.toUpperCase() + '\'S ' + progressText;
         }
         progressLabel.text(progressText);
+        var valueLabel = GameObj('<div class="text-container"/>');
+
         $('body').append(bombProgress);
         $('body').append(progressLabel);
+        $('body').append(valueLabel);
         
         bombProgress.css({'width': $(window).width() - leftPadding - rightPadding,
                           'height': 20});
@@ -28,6 +31,8 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
 
         this.bombProgress = bombProgress;
         this.progressLabel = progressLabel;
+        this.valueLabel = valueLabel;
+        this.isMain = isMain;
 
         this.setProgress(progress);
     };
@@ -35,10 +40,14 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
     BombProgress.prototype.destroy = function() {
         this.bombProgress.remove();
         this.progressLabel.remove();
+        this.valueLabel.remove();
     }
 
     BombProgress.prototype.setProgress = function(progress) {
         this.bombProgress.val(progress);
+        this.valueLabel.text(progress + '%');
+        this.valueLabel.setPos(this.bombProgress.position.x + this.bombProgress.width() - this.valueLabel.width(),
+                this.progressLabel.position.y);
     }
 
     return BombProgress;
