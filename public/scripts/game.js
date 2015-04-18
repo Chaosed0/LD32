@@ -130,7 +130,6 @@ require(['jquery', './Util', './GameObj',
                     stats.wars[j] = false;
                     continentStats[j].wars[i] = false;
                 }
-                $(window).trigger("Fallen", i);
             }
         }
 
@@ -187,6 +186,18 @@ require(['jquery', './Util', './GameObj',
     /* Re-display UI if an action is taken */
     actionDisplay.elem.on("Action", displayUI);
 
+    var reddenLabel = function(index) {
+        var label = labels[index];
+        var stability = continentStats[index].stability;
+        var redness;
+        if (stability > 0) {
+            redness = Math.floor(200*(100-continentStats[index].stability)/100);
+        } else {
+            redness = 255;
+        }
+        label.css('color', 'rgba(' + redness + ',0,0,1.0)');
+    }
+
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
         var label = GameObj('<div/>').text(continents[i]);
@@ -201,15 +212,15 @@ require(['jquery', './Util', './GameObj',
             'flex-direction': 'column',
         });
 
-        label.hover(function() {
-            $(this).css('color', '#0000FF');
-        }, function() {
-            $(this).css('color', '#000000');
-        });
-
         (function() {
             var index = i;
             label.mousedown(function() { selectedContinent = index; displayUI(); });
+
+            label.hover(function() {
+                $(this).css('color', '#0000FF');
+            }, function() {
+                reddenLabel(index);
+            });
         })();
 
         $('body').append(label);
@@ -220,11 +231,11 @@ require(['jquery', './Util', './GameObj',
         labels.push(label);
     }
 
-    $(window).on("Fallen", function(e, continentIndex) {
-        /* When a country falls, color its label on the map */
-        var label = labels[continentIndex];
-        label.css('color', 'red');
-        label.unbind('mouseenter mouseleave');
+    $(window).on("NewMonth", function(e) {
+        for (var i = 0; i < continents.length; i++) {
+            var label = labels[i];
+            reddenLabel(i);
+        }
     });
 
     var nextMonthButton = GameObj('<button type="button"/>');
