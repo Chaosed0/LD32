@@ -71,6 +71,9 @@ h1 {
 }
 
 #log {
+    border-top: 1px solid #006979;
+    border-bottom: 1px solid #006979;
+    overflow: hidden;
     width: 100%;
     flex: 1;
 }
