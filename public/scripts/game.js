@@ -9,8 +9,8 @@ require(['jquery', './Util', './GameObj',
     var self = this;
 
     const initialWars = 3;
-    const initialAgents = 2;
-    const initialSquads = 1;
+    const initialAgents = 1;
+    const initialSquads = 2;
     const initialScience = 5;
 
     var continents = [

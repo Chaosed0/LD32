@@ -41,11 +41,11 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
         this.elem.append($('<p/>').text(stabilityText));
 
         if (stats.hasAgents) {
-            this.elem.append($('<p/>').text('Agents deployed on this continent.'));
+            this.elem.append($('<p/>').text('Bomb progress inhibited by agent.'));
         }
 
         if (stats.hasSquad) {
-            this.elem.append($('<p/>').text('Squadron deployed on this continent.'));
+            this.elem.append($('<p/>').text('Stability protected by squadron.'));
         }
 
         this.elem.append('<h2>Wars</h2>');
