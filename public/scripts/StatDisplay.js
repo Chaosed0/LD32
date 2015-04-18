@@ -6,6 +6,8 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
             'outline': '1px solid #aaa',
             'background-color': '#eee',
             'padding': '5px',
+            'width': '250px',
+            'height': '150px'
         });
 
         $('body').append(elem);

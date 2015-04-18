@@ -5,6 +5,8 @@ require(['jquery', './Util', './GameObj',
 
     var self = this;
 
+    const initialWars = 5;
+
     var continents = [
         'North America',
         'South America',
@@ -24,13 +26,27 @@ require(['jquery', './Util', './GameObj',
     ];
 
     var continentStats = [];
+    var continentWars = [];
 
-    for(var i = 0; i < continents.length; i++) {
+    for (var i = 0; i < continents.length; i++) {
         var stats = {
             power: Math.floor(u.getRandom(0, 10)),
             stability: Math.floor(u.getRandom(90, 100))
         }
         continentStats.push(stats);
+    }
+
+    for (var i = 0; i < continents.length; i++) {
+        continentWars.push([]);
+        for (var j = 0; j < continents.length; j++) {
+            continentWars[i].push(false);
+        }
+    }
+
+    for(var i = 0; i < initialWars; i++) {
+        var first = Math.floor(u.getRandom(0, continents.length));
+        var second = Math.floor(u.getRandom(0, continents.length));
+        continentWars[first][second] = true;
     }
 
     var width = $(window).width();
