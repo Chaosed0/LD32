@@ -18,6 +18,10 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
         this.elem.empty();
         this.elem.append('<h1>X-MOC HQ</h1>');
         this.elem.append($('<p/>').text('Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads));
+
+        if (continentStats === undefined) {
+            return;
+        }
         var self = this;
         var agentsButton = $('<button type="button"/>');
         var squadButton = $('<button type="button"/>');

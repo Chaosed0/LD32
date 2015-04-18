@@ -15,6 +15,12 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
 
     StatDisplay.prototype.displayStats = function(continents, continentStats, index) {
         this.elem.empty();
+
+        if (index === null) {
+            this.elem.append('<b>No continent selected</b>');
+            return;
+        }
+
         var stats = continentStats[index];
 
         var strengthText = 'Strength: ' + stats.strength;

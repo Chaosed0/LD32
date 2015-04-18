@@ -119,9 +119,6 @@ require(['jquery', './Util', './GameObj',
     });
 
     var displayUI = function() {
-        if (selectedContinent === null) {
-            return;
-        }
         continentStatDisplay.displayStats(continents, continentStats, selectedContinent);
         actionDisplay.displayActions(continentStats[selectedContinent], playerStats, function() {
             /* Re-display UI if an action is taken */
@@ -130,12 +127,14 @@ require(['jquery', './Util', './GameObj',
         continentStatDisplay.visible(true);
         actionDisplay.visible(true);
 
-        if (continentBombProgress !== null) {
-            continentBombProgress.destroy();
+        if (selectedContinent != null) {
+            if (continentBombProgress !== null) {
+                continentBombProgress.destroy();
+            }
+            continentBombProgress = new BombProgress(false, continentStats[selectedContinent].progress, continents[selectedContinent]);
         }
-        continentBombProgress = new BombProgress(false, continentStats[selectedContinent].progress, continents[selectedContinent]);
     };
-
+    displayUI();
     $(window).on('NewMonth', displayUI);
 
     for (var i = 0; i < continents.length; i++) {
