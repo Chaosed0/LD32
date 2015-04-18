@@ -2,19 +2,11 @@
 html, body {
     margin: 0;
     background-color: #222222;
+    height: 100%;
 }
 
 h1 {
-    margin-top: 0k
-}
-
-.container {
-    outline: 1px solid #006979;
-    background-color: #003949;
-    color: #ddd;
-    padding: 5px;
-    box-sizing: border-box;
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+    margin-top: 0;
 }
 
 .text-container {
@@ -27,10 +19,10 @@ h1 {
     user-select: none;
     cursor: default;
     text-align: center;
+    display: flex;
     justify-content: center;
     align-content: center;
     flex-direction: column;
-    display: flex;
 }
 
 .button {
@@ -45,6 +37,47 @@ h1 {
 
 .button:hover {
     background-color: #006979;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+
+}
+
+#sidebar {
+    width: 250px;
+    height: 100%;
+    outline: 1px solid #006979;
+    background-color: #003949;
+    color: #ddd;
+    padding: 5px;
+    box-sizing: border-box;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+#map_container {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+}
+
+#stats {
+    width: 100%;
+}
+
+#log {
+    width: 100%;
+    flex: 1;
+}
+
+#actions {
+    width: 100%;
+    height: 170px;
 }
 
 progress {
@@ -62,12 +95,6 @@ progress::-moz-progress-bar {
 
 progress::-webkit-progress-value {
     background: #005969;
-}
-
-progress::-webkit-progress-value::before {
-    position: absolute;
-    right: 0;
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
 }
 
 progress::-webkit-progress-bar {

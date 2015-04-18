@@ -104,7 +104,7 @@ require(['jquery', './Util', './GameObj',
                     var victorStats = continentStats[j];
                     victorStats.strength += Math.ceil(stats.strength/numWars);
                     victorStats.science += Math.ceil(stats.science/numWars);
-                    victorStats.progress += Math.ceil(stats.progress/4);
+                    victorStats.progress += Math.ceil(stats.progress);
 
                     /* If the country had agents/squads in it, give them back */
                     if (stats.hasAgents) {
@@ -142,21 +142,18 @@ require(['jquery', './Util', './GameObj',
         $(window).trigger("NewMonth");
     }
 
-    var width = $(window).width();
-    var height = $(window).height();
+    var mainWidth = $(map_container).width();
+    var mainHeight = $(map_container).height();
 
     var map = GameObj('#map');
     var mapWidth = map.width();
     var mapHeight = map.height();
-    var ratio = Math.min(width / mapWidth, height / mapHeight);
+    var ratio = Math.min(mainWidth / mapWidth, mainHeight / mapHeight);
     console.log(ratio);
     map.width(mapWidth * ratio);
     map.height(mapHeight * ratio);
-    map.setPos((width - map.width())/2.0, (height - map.height())/2.0);
-    map.css('z-index', -1000);
+    map.setPos($('#sidebar').width() + (mainWidth - map.width())/2.0, (mainHeight - map.height())/2.0);
 
-    var continentStatDisplay = new StatDisplay();
-    var actionDisplay = new ActionDisplay();
     var ourBombProgress = new BombProgress(true, playerStats.progress);
     var continentBombProgress = null;
     var selectedContinent = null;
@@ -167,10 +164,8 @@ require(['jquery', './Util', './GameObj',
     });
 
     var displayUI = function() {
-        continentStatDisplay.displayStats(continents, continentStats, selectedContinent);
-        actionDisplay.displayActions(continentStats[selectedContinent], playerStats)
-        continentStatDisplay.visible(true);
-        actionDisplay.visible(true);
+        StatDisplay.displayStats(continents, continentStats, selectedContinent);
+        ActionDisplay.displayActions(continentStats[selectedContinent], playerStats)
 
         if (selectedContinent != null) {
             if (continentBombProgress !== null) {
@@ -184,7 +179,7 @@ require(['jquery', './Util', './GameObj',
     /* Re-display UI on a new month */
     $(window).on('NewMonth', displayUI);
     /* Re-display UI if an action is taken */
-    actionDisplay.elem.on("Action", displayUI);
+    ActionDisplay.setActionCallback(displayUI);
 
     var reddenLabel = function(index) {
         var label = labels[index];
@@ -213,7 +208,7 @@ require(['jquery', './Util', './GameObj',
             });
         })();
 
-        $('body').append(label);
+        $('#map_container').append(label);
         label.width(label.width()*1.5);
         label.height(label.height()*3);
         label.setPos(map.position.x + map.width() * position.x - label.width()/2,
@@ -235,5 +230,5 @@ require(['jquery', './Util', './GameObj',
     nextMonthButton.setPos($(window).width() - nextMonthButton.width() - 20,
                            $(window).height() - nextMonthButton.height() - 20);
     nextMonthButton.click(nextMonth);
-    $('body').append(nextMonthButton);
+    $('#map_container').append(nextMonthButton);
 });

@@ -4,20 +4,24 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
     const badWarColor = '#f00';
     const peaceColor = '#0f0';
 
-    var ActionDisplay = function() {
-        this.elem.css({
-            'width': '250px',
-            'height': '200px',
-        });
-        this.elem.setPos(20, $(window).height() - this.elem.height() - 20);
-    }
-    ActionDisplay.prototype = new UIElem();
-    ActionDisplay.prototype.constructor = ActionDisplay;
+    var ActionDisplay = {};
+    var elem = $('#actions');
+    var actionCb = null;
 
-    ActionDisplay.prototype.displayActions = function(continentStats, playerStats) {
-        this.elem.empty();
-        this.elem.append('<h1>X-MOC HQ</h1>');
-        this.elem.append($('<p/>').text('Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads));
+    ActionDisplay.setActionCallback = function(cb) {
+        actionCb = cb;
+    }
+
+    ActionDisplay.actionCallback = function() {
+        if(actionCb !== null) {
+            actionCb();
+        }
+    }
+
+    ActionDisplay.displayActions = function(continentStats, playerStats) {
+        elem.empty();
+        elem.append('<h1>X-MOC HQ</h1>');
+        elem.append($('<p/>').text('Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads));
 
         if (continentStats === undefined) {
             return;
@@ -31,7 +35,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             agentsButton.click(function() {
                 continentStats.hasAgents = false;
                 playerStats.agents++;
-                self.elem.trigger("Action");
+                ActionDisplay.actionCallback();
             });
         } else if (playerStats.agents <= 0) {
             agentsButton.text("No agents");
@@ -41,7 +45,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             agentsButton.click(function() {
                 continentStats.hasAgents = true;
                 playerStats.agents--;
-                self.elem.trigger("Action");
+                ActionDisplay.actionCallback();
             });
         }
 
@@ -50,7 +54,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             squadButton.click(function() {
                 continentStats.hasSquad = false;
                 playerStats.squads++;
-                self.elem.trigger("Action");
+                ActionDisplay.actionCallback();
             });
         } else if (playerStats.squads <= 0) {
             squadButton.text("No squadrons");
@@ -60,13 +64,13 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             squadButton.click(function() {
                 continentStats.hasSquad = true;
                 playerStats.squads--;
-                self.elem.trigger("Action");
+                ActionDisplay.actionCallback();
             });
         }
         
-        this.elem.append(agentsButton);
-        this.elem.append('<br/>');
-        this.elem.append(squadButton);
+        elem.append(agentsButton);
+        elem.append('<br/>');
+        elem.append(squadButton);
     }
 
     return ActionDisplay;

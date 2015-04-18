@@ -15,9 +15,9 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
         progressLabel.text(progressText);
         var valueLabel = GameObj('<div class="text-container"/>');
 
-        $('body').append(bombProgress);
-        $('body').append(progressLabel);
-        $('body').append(valueLabel);
+        $('#map_container').append(bombProgress);
+        $('#map_container').append(progressLabel);
+        $('#map_container').append(valueLabel);
         
         bombProgress.css({'width': $(window).width() - leftPadding - rightPadding,
                           'height': 20});
