@@ -109,7 +109,7 @@ require(['jquery', './Util', './GameObj',
         (function() {
             var index = i;
             var displayUI = function() {
-                continentStatDisplay.displayStats(continents[index], continentStats[index]);
+                continentStatDisplay.displayStats(continents, continentStats, index);
                 continentWarDisplay.displayWars(continents, continentStats, index);
                 actionDisplay.displayActions(continentStats[index], playerStats, displayUI);
                 continentStatDisplay.visible(true);
