@@ -142,8 +142,8 @@ require(['jquery', './Util', './GameObj',
         $(window).trigger("NewMonth");
     }
 
-    var mainWidth = $(map_container).width();
-    var mainHeight = $(map_container).height();
+    var mainWidth = $('#map_container').width();
+    var mainHeight = $('#map_container').height();
 
     var map = GameObj('#map');
     var mapWidth = map.width();
