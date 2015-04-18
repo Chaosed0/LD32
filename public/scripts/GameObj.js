@@ -4,8 +4,6 @@ define(['jquery', './Util'], function($, u) {
         var obj = $(selector);
         obj.position = {x: 0, y: 0};
         obj.css('position', 'absolute');
-        obj.css('width', 'auto');
-        obj.css('height', 'auto');
 
         obj.setPos = function(x, y) {
             var pos;
