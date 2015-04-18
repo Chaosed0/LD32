@@ -23,7 +23,7 @@ require(['jquery', './Util', './GameObj',
     ];
 
     var labelPositions = [
-        { x: 0.2, y: 0.3 },
+        { x: 0.19, y: 0.31 },
         { x: 0.3, y: 0.6 },
         { x: 0.525, y: 0.45 },
         { x: 0.55, y: 0.225 },
@@ -189,28 +189,18 @@ require(['jquery', './Util', './GameObj',
     var reddenLabel = function(index) {
         var label = labels[index];
         var stability = continentStats[index].stability;
-        var redness;
+        var other;
         if (stability > 0) {
-            redness = Math.floor(200*(100-continentStats[index].stability)/100);
+            other = Math.floor(200*continentStats[index].stability/100 + 55);
         } else {
-            redness = 255;
+            other = 0;
         }
-        label.css('color', 'rgba(' + redness + ',0,0,1.0)');
+        label.css('color', 'rgba(255,' + other + ',' + other + ',1.0)');
     }
 
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
-        var label = GameObj('<div/>').text(continents[i]);
-        label.css({
-            'font-size': '250%',
-            'user-select': 'none',
-            'cursor': 'default',
-            'text-align': 'center',
-            'display': 'flex',
-            'justify-content': 'center',
-            'align-content': 'center',
-            'flex-direction': 'column',
-        });
+        var label = GameObj('<div class="text-container continent-label"/>').text(continents[i].toUpperCase());
 
         (function() {
             var index = i;

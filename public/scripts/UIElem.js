@@ -1,12 +1,7 @@
 
 define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
     var UIElem = function() {
-        var elem = GameObj('<div/>');
-        elem.css({
-            'outline': '1px solid #aaa',
-            'background-color': '#eee',
-            'padding': '5px',
-        });
+        var elem = GameObj('<div class="container"/>');
 
         $('body').append(elem);
 
