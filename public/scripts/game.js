@@ -229,7 +229,7 @@ require(['jquery', './Util', './GameObj',
     });
 
     var nextMonthButton = GameObj('<button type="button" class="button"/>');
-    nextMonthButton.text("Commit Strategy");
+    nextMonthButton.text("COMMIT");
     nextMonthButton.width(150);
     nextMonthButton.height(50);
     nextMonthButton.setPos($(window).width() - nextMonthButton.width() - 20,
