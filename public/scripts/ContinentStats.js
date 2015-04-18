@@ -9,6 +9,7 @@ define(['jquery', './Util'], function($, u) {
         this.hasAgents = false;
         this.hasSquad = false;
         this.wars = [];
+        this.conqueror = null;
     }
 
     ContinentStats.squadStrength = 5;

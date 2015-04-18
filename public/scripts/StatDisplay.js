@@ -23,13 +23,20 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
 
         var stats = continentStats[index];
 
+        this.elem.append('<h1>' + continents[index] + '</h1>');
+
+        if (stats.stability <= 0) {
+            u.assert(stats.conqueror !== null);
+            this.elem.append($('<p/>').text("Conquered by " + stats.conqueror).css('color', 'red'));
+            return;
+        }
+
         var strengthText = 'Strength: ' + stats.strength;
         var stabilityText = 'Stability: ' + stats.stability;
         if (stats.hasSquad) {
             strengthText += ' (+5)';
         }
 
-        this.elem.append('<h1>' + continents[index] + '</h1>');
         this.elem.append($('<p/>').text(strengthText));
         this.elem.append($('<p/>').text(stabilityText));
 

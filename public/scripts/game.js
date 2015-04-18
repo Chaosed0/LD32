@@ -66,6 +66,12 @@ require(['jquery', './Util', './GameObj',
         playerStats.progress += playerStats.science;
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
+            var numWars = 0;
+            
+            /* If this country has fallen, no need to calculate */
+            if (stats.stability <= 0) {
+                continue;
+            }
 
             /* Add progress on bomb if our agents aren't present */
             if (!stats.hasAgents) {
@@ -74,21 +80,64 @@ require(['jquery', './Util', './GameObj',
 
             /* Calculate impact of wars on stability */
             for (var j = 0; j < stats.wars.length; j++) {
-                if (stats.wars[j]) {
-                    var relativeStrength = stats.getEffectiveStrength() - continentStats[j].getEffectiveStrength();
-                    /* If relativeStrength is less than zero and the country
-                     * has one of our squads defending it, don't subtract */
-                    if (!stats.hasSquad || relativeStrength > 0) {
-                        stats.stability += relativeStrength;
-                    }
+                if (!stats.wars[j]) {
+                    continue;
                 }
+
+                var relativeStrength = stats.getEffectiveStrength() - continentStats[j].getEffectiveStrength();
+                /* If the country has one of our squads defending it, don't subtract */
+                if (!stats.hasSquad && relativeStrength < 0) {
+                    stats.stability += relativeStrength;
+                }
+                ++numWars;
+            }
+
+            /* If the country has just fallen, split its assets among the victors */
+            if (stats.stability <= 0) {
+                var warCount = 0;
+                stats.conqueror = '';
+                for(var j = 0; j < stats.wars.length; j++) {
+                    if (!stats.wars[j]) {
+                        continue;
+                    }
+
+                    var victorStats = continentStats[j];
+                    victorStats.strength += Math.ceil(stats.strength/numWars);
+                    victorStats.science += Math.ceil(stats.science/numWars);
+                    victorStats.progress += Math.ceil(stats.progress/4);
+
+                    /* If the country had agents/squads in it, give them back */
+                    if (stats.hasAgents) {
+                        stats.hasAgents = false;
+                        playerStats.agents++;
+                    }
+
+                    if (stats.hasSquad) {
+                        stats.hasSquad = false;
+                        playerStats.squad++;
+                    }
+
+                    if (warCount != 0 && numWars > 2) {
+                        stats.conqueror += ',';
+                    }
+                    /* Figure out whether we should put 'and' in or not */
+                    if (warCount == numWars - 1 && numWars > 1) {
+                        stats.conqueror += ' and';
+                    }
+                    stats.conqueror += ' ' + continents[j];
+                    ++warCount;
+
+                    stats.wars[j] = false;
+                    continentStats[j].wars[i] = false;
+                }
+                $(window).trigger("Fallen", i);
             }
         }
 
         /* Add to strength only after we're done calculating war effects */
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
-            stats.strength += Math.floor(u.getRandom(stats.science/2, stats.science));
+            stats.strength += Math.floor(u.getRandom((10 - stats.science)/2, (10 - stats.science)));
         }
 
         $(window).trigger("NewMonth");
@@ -113,17 +162,14 @@ require(['jquery', './Util', './GameObj',
     var continentBombProgress = null;
     var selectedContinent = null;
 
+    /* Update our bomb progress on a new month */
     $(window).on('NewMonth', function() {
-        /* Update our bomb progress on a new month */
         ourBombProgress.setProgress(playerStats.progress);
     });
 
     var displayUI = function() {
         continentStatDisplay.displayStats(continents, continentStats, selectedContinent);
-        actionDisplay.displayActions(continentStats[selectedContinent], playerStats, function() {
-            /* Re-display UI if an action is taken */
-            displayUI(continent);
-        });
+        actionDisplay.displayActions(continentStats[selectedContinent], playerStats)
         continentStatDisplay.visible(true);
         actionDisplay.visible(true);
 
@@ -134,8 +180,12 @@ require(['jquery', './Util', './GameObj',
             continentBombProgress = new BombProgress(false, continentStats[selectedContinent].progress, continents[selectedContinent]);
         }
     };
+    /* Display the UI */
     displayUI();
+    /* Re-display UI on a new month */
     $(window).on('NewMonth', displayUI);
+    /* Re-display UI if an action is taken */
+    actionDisplay.elem.on("Action", displayUI);
 
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
@@ -169,6 +219,13 @@ require(['jquery', './Util', './GameObj',
                      map.position.y + map.height() * position.y - label.height()/2);
         labels.push(label);
     }
+
+    $(window).on("Fallen", function(e, continentIndex) {
+        /* When a country falls, color its label on the map */
+        var label = labels[continentIndex];
+        label.css('color', 'red');
+        label.unbind('mouseenter mouseleave');
+    });
 
     var nextMonthButton = GameObj('<button type="button"/>');
     nextMonthButton.text("Commit Strategy");

@@ -14,7 +14,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
     ActionDisplay.prototype = new UIElem();
     ActionDisplay.prototype.constructor = ActionDisplay;
 
-    ActionDisplay.prototype.displayActions = function(continentStats, playerStats, onAction) {
+    ActionDisplay.prototype.displayActions = function(continentStats, playerStats) {
         this.elem.empty();
         this.elem.append('<h1>X-MOC HQ</h1>');
         this.elem.append($('<p/>').text('Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads));
@@ -31,7 +31,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             agentsButton.click(function() {
                 continentStats.hasAgents = false;
                 playerStats.agents++;
-                onAction();
+                self.elem.trigger("Action");
             });
         } else if (playerStats.agents <= 0) {
             agentsButton.text("No agents");
@@ -41,7 +41,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             agentsButton.click(function() {
                 continentStats.hasAgents = true;
                 playerStats.agents--;
-                onAction();
+                self.elem.trigger("Action");
             });
         }
 
@@ -50,7 +50,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             squadButton.click(function() {
                 continentStats.hasSquad = false;
                 playerStats.squads++;
-                onAction();
+                self.elem.trigger("Action");
             });
         } else if (playerStats.squads <= 0) {
             squadButton.text("No squadrons");
@@ -60,7 +60,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             squadButton.click(function() {
                 continentStats.hasSquad = true;
                 playerStats.squads--;
-                onAction();
+                self.elem.trigger("Action");
             });
         }
         
