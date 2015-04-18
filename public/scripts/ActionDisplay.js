@@ -32,7 +32,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             agentsButton.text("No agents");
             agentsButton.prop("disabled", true);
         } else {
-            agentsButton.text("Send agents");
+            agentsButton.text("Deploy agents");
             agentsButton.click(function() {
                 continentStats.hasAgents = true;
                 playerStats.agents--;
@@ -51,7 +51,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
             squadButton.text("No squadrons");
             squadButton.prop("disabled", true);
         } else {
-            squadButton.text("Send squadron");
+            squadButton.text("Deploy squadron");
             squadButton.click(function() {
                 continentStats.hasSquad = true;
                 playerStats.squads--;
