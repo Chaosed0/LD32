@@ -1,40 +1,37 @@
 
-require(['jquery', './Util', './GameObj'], function($, u, GameObj) {
+require(['jquery', './Util', './GameObj',
+        './StatDisplay',
+        ], function($, u, GameObj, StatDisplay) {
 
     var self = this;
 
-    var labelProps = [
-        {
-            name: 'North America',
-            x: 0.2,
-            y: 0.3,
-        },
-        {
-            name: 'South America',
-            x: 0.3,
-            y: 0.6,
-        },
-        {
-            name: 'Africa',
-            x: 0.525,
-            y: 0.45,
-        },
-        {
-            name: 'Europe',
-            x: 0.55,
-            y: 0.225,
-        },
-        {
-            name: 'Asia',
-            x: 0.7,
-            y: 0.3,
-        },
-        {
-            name: 'Australia',
-            x: 0.85,
-            y: 0.675,
-        },
+    var continents = [
+        'North America',
+        'South America',
+        'Africa',
+        'Europe',
+        'Asia',
+        'Australia',
     ];
+
+    var labelPositions = [
+        { x: 0.2, y: 0.3 },
+        { x: 0.3, y: 0.6 },
+        { x: 0.525, y: 0.45 },
+        { x: 0.55, y: 0.225 },
+        { x: 0.7, y: 0.3 },
+        { x: 0.85, y: 0.675 },
+    ];
+
+    var continentStats = [];
+
+    for(var i = 0; i < continents.length; i++) {
+        var stats = {
+            power: Math.floor(u.getRandom(0, 10)),
+            stability: Math.floor(u.getRandom(90, 100))
+        }
+        continentStats.push(stats);
+    }
 
     var width = $(window).width();
     var height = $(window).height();
@@ -47,9 +44,11 @@ require(['jquery', './Util', './GameObj'], function($, u, GameObj) {
     map.setPos((width - map.width())/2.0, (height - map.height())/2.0);
     map.css('z-index', -1000);
 
-    for (var i = 0; i < labelProps.length; i++) {
-        var props = labelProps[i];
-        var label = GameObj('<div/>').text(props.name);
+    var continentStatDisplay = new StatDisplay();
+
+    for (var i = 0; i < continents.length; i++) {
+        var position = labelPositions[i];
+        var label = GameObj('<div/>').text(continents[i]);
         label.css({
             'font-size': '250%',
             'user-select': 'none',
@@ -67,10 +66,19 @@ require(['jquery', './Util', './GameObj'], function($, u, GameObj) {
             $(this).css('color', '#000000');
         });
 
+        (function() {
+            var index = i;
+            label.mousedown(function() {
+                continentStatDisplay.displayStats(continents[index], continentStats[index]);
+                continentStatDisplay.visible('true');
+            });
+        })();
+
         $('body').append(label);
         label.width(label.width()*1.5);
         label.height(label.height()*3);
-        label.setPos(map.position.x + map.width() * props.x - label[0].clientWidth/2,
-                     map.position.y + map.height() * props.y - label[0].clientHeight/2);
+        label.setPos(map.position.x + map.width() * position.x - label[0].clientWidth/2,
+                     map.position.y + map.height() * position.y - label[0].clientHeight/2);
     }
+
 });
