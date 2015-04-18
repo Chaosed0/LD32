@@ -8,7 +8,7 @@ define(['jquery', './Util', './UIElem'], function($, u, UIElem) {
         this.elem.css({
             'width': '250px',
         });
-        this.elem.setPos(20, 50);
+        this.elem.setPos(20, 20);
     }
     StatDisplay.prototype = new UIElem();
     StatDisplay.prototype.constructor = StatDisplay;

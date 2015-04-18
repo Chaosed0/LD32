@@ -83,6 +83,8 @@ require(['jquery', './Util', './GameObj',
 
     var continentStatDisplay = new StatDisplay();
     var actionDisplay = new ActionDisplay();
+    var bombProgress = new BombProgress(true, playerStats.progress);
+    var continentBombProgress = null;
 
     for (var i = 0; i < continents.length; i++) {
         var position = labelPositions[i];
@@ -111,6 +113,11 @@ require(['jquery', './Util', './GameObj',
                 actionDisplay.displayActions(continentStats[index], playerStats, displayUI);
                 continentStatDisplay.visible(true);
                 actionDisplay.visible(true);
+
+                if (continentBombProgress !== null) {
+                    continentBombProgress.destroy();
+                }
+                continentBombProgress = new BombProgress(false, continentStats[index].progress, continents[index]);
             };
             label.mousedown(displayUI);
         })();
@@ -122,6 +129,4 @@ require(['jquery', './Util', './GameObj',
                      map.position.y + map.height() * position.y - label[0].clientHeight/2);
         labels.push(label);
     }
-
-    var bombProgress = new BombProgress(true);
 });
