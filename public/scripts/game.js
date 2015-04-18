@@ -3,7 +3,8 @@ require(['jquery', './Util', './GameObj',
         './StatDisplay',
         './WarDisplay',
         './ActionDisplay',
-        ], function($, u, GameObj, StatDisplay, WarDisplay, ActionDisplay) {
+        './BombProgress',
+        ], function($, u, GameObj, StatDisplay, WarDisplay, ActionDisplay, BombProgress) {
 
     var self = this;
 
@@ -30,6 +31,7 @@ require(['jquery', './Util', './GameObj',
         { x: 0.85, y: 0.675 },
     ];
 
+    var labels = [];
     var continentStats = [];
 
     var playerStats = {
@@ -122,13 +124,8 @@ require(['jquery', './Util', './GameObj',
         label.height(label.height()*3);
         label.setPos(map.position.x + map.width() * position.x - label[0].clientWidth/2,
                      map.position.y + map.height() * position.y - label[0].clientHeight/2);
+        labels.push(label);
     }
 
-    var bombProgress = GameObj('<progress value="70" max="100"></progress>');
-    var progressLabel = GameObj('<div>MIND CONTROL BOMB RESEARCH</div>');
-    bombProgress.setPos(290, $(window).height() - 20 - 20);
-    bombProgress.css({'width': $(window).width() - 290 - 20, 'height': 20});
-    progressLabel.setPos(290, $(window).height() - 60);
-    $('body').append(bombProgress);
-    $('body').append(progressLabel);
+    var bombProgress = new BombProgress(true);
 });
