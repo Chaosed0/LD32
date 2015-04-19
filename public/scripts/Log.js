@@ -1,19 +1,13 @@
 
-define(['jquery', './Util'], function($, u) {
-
-    var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+define(['jquery', './Util', './Constants'], function($, u, c) {
 
     var Log = function(logElem, continents) {
         var self = this;
         this.continents = continents;
-        this.year = 2034;
         this.log = logElem;
 
         $(window).bind("NewMonthLog", function(e, month) {
-            if (month != 0 && month%12 == 0) {
-                ++self.year;
-            }
-            self.message($('<p>It is now ' + months[month%months.length] + ', ' + self.year + '.</p>'));
+            self.message($('<p>It is now ' + c.months[month%c.months.length] + ', ' + (c.startYear+Math.floor(month/12)) + '.</p>'));
         });
         $(window).bind("NewWar", function(e, data) {
             var message = $('<p/>').css('color', '#a00');
@@ -28,6 +22,9 @@ define(['jquery', './Util'], function($, u) {
         });
         $(window).bind("UIDisplay", function() {
             self.log.scrollTop(self.log[0].scrollHeight);
+        });
+        $(window).bind("OfferAccept", function(e, offer) {
+            self.message($('<p>You accepted ' + self.continents[offer.offeringContinent] + '\'s offer.'));
         });
     }
 

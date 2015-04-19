@@ -3,10 +3,12 @@ require(['jquery', './Util', './GameObj',
         './StatDisplay',
         './ActionDisplay',
         './BombProgress',
+        './OfferDisplay',
         './ContinentStats',
         './Log',
         './Arc',
-        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, ContinentStats, Log, Arc) {
+        './Offer',
+        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, OfferDisplay, ContinentStats, Log, Arc, Offer) {
 
     var self = this;
 
@@ -47,7 +49,7 @@ require(['jquery', './Util', './GameObj',
     var month = 0;
     var log = new Log($('#log'), continents);
     /* Log the first month */
-    $(window).trigger("NewMonth", month);
+    $(window).trigger("NewMonthLog", month);
 
     for (var i = 0; i < continents.length; i++) {
         continentStats.push(new ContinentStats());
@@ -85,6 +87,7 @@ require(['jquery', './Util', './GameObj',
         playerStats.progress += playerStats.science;
         if (playerStats.progress >= 100) {
             $(window).trigger('Victory', i);
+            return;
         }
 
         for (var i = 0; i < continents.length; i++) {
@@ -114,6 +117,7 @@ require(['jquery', './Util', './GameObj',
             if (stats.stability <= 0) {
                 stats.conqueror = continents[stats.wars.indexOf(true)];
                 $(window).trigger('Defeat', i);
+                return;
             }
         }
 
@@ -128,8 +132,20 @@ require(['jquery', './Util', './GameObj',
             newWar();
         }
 
-        $(window).trigger("NewMonth", month);
+        /* A new offer is made every turn other than turn 0 */
+        var offer = null;
+        if (month != 0) {
+            offer = new Offer();
+            offer.makeRandom(continentStats, playerStats);
+            $(window).trigger('NewOffer', offer);
+        }
+
+        $(window).trigger('NewMonth', {month: month, offer: offer});
     }
+
+    $(window).on('OfferAccept', function(e, offer) {
+        offer.accept(continentStats, playerStats);
+    });
 
     var mainWidth = $('#map_container').width();
     var mainHeight = $('#map_container').height();
@@ -146,9 +162,11 @@ require(['jquery', './Util', './GameObj',
     var ourBombProgress = new BombProgress(true, playerStats.progress);
     var selectedContinent = null;
 
-    /* Update our bomb progress on a new month */
-    $(window).on('NewMonth', function() {
+    $(window).on('NewMonth', function(e, data) {
         ourBombProgress.setProgress(playerStats.progress);
+
+        /* Show the offer */
+        OfferDisplay.showOffer(data.month, continents, data.offer);
     });
 
     var displayUI = function() {
@@ -158,10 +176,10 @@ require(['jquery', './Util', './GameObj',
     };
     /* Display the UI */
     displayUI();
-    /* Re-display UI on a new month */
+    /* We have to re-display the UI any time stats change */
     $(window).on('NewMonth', displayUI);
-    /* Re-display UI if an action is taken */
-    ActionDisplay.setActionCallback(displayUI);
+    $(window).on('OfferAccept', displayUI);
+    $(window).on('ActionTaken', displayUI);
 
     var reddenLabel = function(index) {
         var label = labels[index];

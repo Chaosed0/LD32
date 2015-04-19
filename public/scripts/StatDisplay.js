@@ -36,6 +36,20 @@ define(['jquery', './Util'], function($, u) {
         elem.append($('<p/>').text(stabilityText));
         elem.append($('<p/>').text(researchText));
 
+        if (stats.agentBlockedDuration > 0) {
+            elem.append($('<p/>').css('color', '#a00')
+                    .append('Agents blocked here for ')
+                    .append($('<span/>').text(stats.agentBlockedDuration).css('color', '#f00'))
+                    .append(' more turns.'));
+        }
+
+        if (stats.squadBlockedDuration > 0) {
+            elem.append($('<p/>').css('color', '#a00')
+                    .append('Squads blocked here for ')
+                    .append($('<span/>').text(stats.squadBlockedDuration).css('color', '#f00'))
+                    .append(' more turns.'));
+        }
+
         if (stats.hasAgent) {
             elem.append($('<p/>').text('Agent protecting stability.').css('color', 'green'));
         }

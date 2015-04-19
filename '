@@ -8,8 +8,6 @@ define(['jquery', './Util'], function($, u) {
         this.progress = 0;
         this.hasAgent = false;
         this.hasSquad = false;
-        this.agentBlockedDuration = 0;
-        this.squadBlockedDuration = 0;
         this.wars = [];
         this.conqueror = null;
     }
@@ -25,17 +23,6 @@ define(['jquery', './Util'], function($, u) {
         for (var i = 0; !atWar && i < this.wars.length; i++) {
             atWar = atWar || this.wars[i];
         }
-        return atWar;
-    }
-
-    ContinentStats.prototype.getWars = function() {
-        var wars = [];
-        for (var i = 0; i < this.wars.length; i++) {
-            if (this.wars[i] == true) {
-                wars.push(i);
-            }
-        }
-        return wars;
     }
 
     return ContinentStats;

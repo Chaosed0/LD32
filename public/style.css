@@ -114,8 +114,8 @@ p {
     position: relative;
     margin: 20% auto;
     padding: 5px 20px 13px 20px;
-    background: #005969;
     outline: 2px solid #006979;
+    background-color: #003949;
     color: #ddd;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
 }

@@ -6,17 +6,6 @@ define(['jquery', './Util'], function($, u) {
 
     var ActionDisplay = {};
     var elem = $('#actions');
-    var actionCb = null;
-
-    ActionDisplay.setActionCallback = function(cb) {
-        actionCb = cb;
-    }
-
-    ActionDisplay.actionCallback = function() {
-        if(actionCb !== null) {
-            actionCb();
-        }
-    }
 
     ActionDisplay.displayActions = function(continentStats, playerStats) {
         elem.empty();
@@ -33,12 +22,15 @@ define(['jquery', './Util'], function($, u) {
         var squadButton = $('<button type="button" class="button"/>');
         var scientistsButton = $('<button type="button" class="button"/>');
 
-        if (continentStats.hasAgent) {
+        if (continentStats.agentBlockedDuration > 0) {
+            squadButton.text("Squads blocked (" + continentStats.agentBlockedDuration + ")");
+            agentsButton.prop("disabled", true);
+        } else if (continentStats.hasAgent) {
             agentsButton.text("Withdraw Agent");
             agentsButton.click(function() {
                 continentStats.hasAgent = false;
                 playerStats.agents++;
-                ActionDisplay.actionCallback();
+                $(window).trigger("ActionTaken");
             });
         } else if (playerStats.agents <= 0) {
             agentsButton.text("No agents");
@@ -48,16 +40,19 @@ define(['jquery', './Util'], function($, u) {
             agentsButton.click(function() {
                 continentStats.hasAgent = true;
                 playerStats.agents--;
-                ActionDisplay.actionCallback();
+                $(window).trigger("ActionTaken");
             });
         }
 
-        if (continentStats.hasSquad) {
+        if (continentStats.squadBlockedDuration > 0) {
+            squadButton.text("Squads blocked (" + continentStats.squadBlockedDuration + ")");
+            squadButton.prop("disabled", true);
+        } else if (continentStats.hasSquad) {
             squadButton.text("Withdraw Squadron");
             squadButton.click(function() {
                 continentStats.hasSquad = false;
                 playerStats.squads++;
-                ActionDisplay.actionCallback();
+                $(window).trigger("ActionTaken");
             });
         } else if (playerStats.squads <= 0) {
             squadButton.text("No Squadrons");
@@ -67,7 +62,7 @@ define(['jquery', './Util'], function($, u) {
             squadButton.click(function() {
                 continentStats.hasSquad = true;
                 playerStats.squads--;
-                ActionDisplay.actionCallback();
+                $(window).trigger("ActionTaken");
             });
         }
 
@@ -79,7 +74,7 @@ define(['jquery', './Util'], function($, u) {
             scientistsButton.click(function() {
                 continentStats.science++;
                 playerStats.science--;
-                ActionDisplay.actionCallback();
+                $(window).trigger("ActionTaken");
             });
         }
         
