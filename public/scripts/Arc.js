@@ -24,7 +24,7 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
 
         var ctx = this.canvas[0].getContext('2d');
         ctx.beginPath();
-        ctx.strokeStyle = '#f00';
+        ctx.strokeStyle = '#c00';
         ctx.lineWidth = 3;
 
         var tp1 = this.transformPoint(p1);
