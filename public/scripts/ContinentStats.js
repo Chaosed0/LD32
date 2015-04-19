@@ -6,7 +6,7 @@ define(['jquery', './Util'], function($, u) {
         this.stability = Math.floor(u.getRandom(90, 100));
         this.science = Math.floor(u.getRandom(3, 7));
         this.progress = 0;
-        this.hasAgents = false;
+        this.hasAgent = false;
         this.hasSquad = false;
         this.wars = [];
         this.conqueror = null;

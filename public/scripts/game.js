@@ -73,11 +73,6 @@ require(['jquery', './Util', './GameObj',
                 continue;
             }
 
-            /* Add progress on bomb if our agents aren't present */
-            if (!stats.hasAgents) {
-                stats.progress += stats.science;
-            }
-
             /* Calculate impact of wars on stability */
             for (var j = 0; j < stats.wars.length; j++) {
                 if (!stats.wars[j]) {
@@ -85,8 +80,8 @@ require(['jquery', './Util', './GameObj',
                 }
 
                 var relativeStrength = stats.getEffectiveStrength() - continentStats[j].getEffectiveStrength();
-                /* If the country has one of our squads defending it, don't subtract */
-                if (!stats.hasSquad && relativeStrength < 0) {
+                /* If no agent on continent, subtract relative strength from stability */
+                if (!stats.hasAgent || relativeStrength < 0) {
                     stats.stability += relativeStrength;
                 }
                 ++numWars;
@@ -99,22 +94,6 @@ require(['jquery', './Util', './GameObj',
                 for(var j = 0; j < stats.wars.length; j++) {
                     if (!stats.wars[j]) {
                         continue;
-                    }
-
-                    var victorStats = continentStats[j];
-                    victorStats.strength += Math.ceil(stats.strength/numWars);
-                    victorStats.science += Math.ceil(stats.science/numWars);
-                    victorStats.progress += Math.ceil(stats.progress);
-
-                    /* If the country had agents/squads in it, give them back */
-                    if (stats.hasAgents) {
-                        stats.hasAgents = false;
-                        playerStats.agents++;
-                    }
-
-                    if (stats.hasSquad) {
-                        stats.hasSquad = false;
-                        playerStats.squad++;
                     }
 
                     if (warCount != 0 && numWars > 2) {
@@ -136,7 +115,7 @@ require(['jquery', './Util', './GameObj',
         /* Add to strength only after we're done calculating war effects */
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
-            stats.strength += Math.floor(u.getRandom((10 - stats.science)/2, (10 - stats.science)));
+            stats.strength += Math.floor(u.getRandom(stats.science, stats.science));
         }
 
         $(window).trigger("NewMonth");
@@ -155,7 +134,6 @@ require(['jquery', './Util', './GameObj',
     map.setPos($('#sidebar').width() + (mainWidth - map.width())/2.0, (mainHeight - map.height())/2.0);
 
     var ourBombProgress = new BombProgress(true, playerStats.progress);
-    var continentBombProgress = null;
     var selectedContinent = null;
 
     /* Update our bomb progress on a new month */
@@ -166,13 +144,6 @@ require(['jquery', './Util', './GameObj',
     var displayUI = function() {
         StatDisplay.displayStats(continents, continentStats, selectedContinent);
         ActionDisplay.displayActions(continentStats[selectedContinent], playerStats)
-
-        if (selectedContinent != null) {
-            if (continentBombProgress !== null) {
-                continentBombProgress.destroy();
-            }
-            continentBombProgress = new BombProgress(false, continentStats[selectedContinent].progress, continents[selectedContinent]);
-        }
     };
     /* Display the UI */
     displayUI();

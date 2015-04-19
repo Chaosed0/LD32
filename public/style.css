@@ -9,6 +9,10 @@ h1 {
     margin-top: 0;
 }
 
+p {
+    margin: 0;
+}
+
 .text-container {
     color: #ddd;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
@@ -35,7 +39,12 @@ h1 {
     box-sizing: border-box;
 }
 
-.button:hover {
+.button:disabled {
+    outline: 1px solid #004959;
+    background-color: #003949;
+}
+
+.button:hover:enabled {
     background-color: #006979;
 }
 

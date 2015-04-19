@@ -30,10 +30,10 @@ define(['jquery', './Util'], function($, u) {
         var agentsButton = $('<button type="button" class="button"/>');
         var squadButton = $('<button type="button" class="button"/>');
 
-        if (continentStats.hasAgents) {
-            agentsButton.text("Withdraw agents");
+        if (continentStats.hasAgent) {
+            agentsButton.text("Withdraw Agent");
             agentsButton.click(function() {
-                continentStats.hasAgents = false;
+                continentStats.hasAgent = false;
                 playerStats.agents++;
                 ActionDisplay.actionCallback();
             });
@@ -41,26 +41,26 @@ define(['jquery', './Util'], function($, u) {
             agentsButton.text("No agents");
             agentsButton.prop("disabled", true);
         } else {
-            agentsButton.text("Deploy agents");
+            agentsButton.text("Deploy Agent");
             agentsButton.click(function() {
-                continentStats.hasAgents = true;
+                continentStats.hasAgent = true;
                 playerStats.agents--;
                 ActionDisplay.actionCallback();
             });
         }
 
         if (continentStats.hasSquad) {
-            squadButton.text("Withdraw squadron");
+            squadButton.text("Withdraw Squadron");
             squadButton.click(function() {
                 continentStats.hasSquad = false;
                 playerStats.squads++;
                 ActionDisplay.actionCallback();
             });
         } else if (playerStats.squads <= 0) {
-            squadButton.text("No squadrons");
+            squadButton.text("No Squadrons");
             squadButton.prop("disabled", true);
         } else {
-            squadButton.text("Deploy squadron");
+            squadButton.text("Deploy Squadron");
             squadButton.click(function() {
                 continentStats.hasSquad = true;
                 playerStats.squads--;
