@@ -23,7 +23,7 @@ define(['jquery', './Util'], function($, u) {
         var scientistsButton = $('<button type="button" class="button"/>');
 
         if (continentStats.agentBlockedDuration > 0) {
-            squadButton.text("Squads blocked (" + continentStats.agentBlockedDuration + ")");
+            agentsButton.text("Agents blocked (" + continentStats.agentBlockedDuration + ")");
             agentsButton.prop("disabled", true);
         } else if (continentStats.hasAgent) {
             agentsButton.text("Withdraw Agent");
