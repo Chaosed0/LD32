@@ -5,7 +5,8 @@ require(['jquery', './Util', './GameObj',
         './BombProgress',
         './ContinentStats',
         './Log',
-        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, ContinentStats, Log) {
+        './Arc',
+        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, ContinentStats, Log, Arc) {
 
     var self = this;
 
@@ -69,10 +70,6 @@ require(['jquery', './Util', './GameObj',
         continentStats[first].wars[second] = true;
         continentStats[second].wars[first] = true;
         $(window).trigger("NewWar", {first: first, second: second});
-    }
-
-    for(var i = 0; i < initialWars; i++) {
-        newWar();
     }
 
     var nextMonth = function() {
@@ -222,6 +219,14 @@ require(['jquery', './Util', './GameObj',
         $('#modal').show();
     });
 
+    $(window).on('NewWar', function(e, data) {
+        var label1 = labels[data.first];
+        var label2 = labels[data.second];
+        var p1 = {x: label1.position.x + label1.width()/2, y: label1.position.y + label1.height()/2};
+        var p2 = {x: label2.position.x + label2.width()/2, y: label2.position.y + label2.height()/2};
+        var arc = new Arc(p1, p2);
+    });
+
     var nextMonthButton = GameObj('<button type="button" class="button"/>');
     nextMonthButton.text("COMMIT");
     nextMonthButton.width(150);
@@ -230,4 +235,9 @@ require(['jquery', './Util', './GameObj',
                            $(window).height() - nextMonthButton.height() - 20);
     nextMonthButton.click(nextMonth);
     $('#map_container').append(nextMonthButton);
+
+    /* Initialize wars */
+    for(var i = 0; i < initialWars; i++) {
+        newWar();
+    }
 });

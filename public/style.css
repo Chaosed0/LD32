@@ -27,6 +27,11 @@ p {
     justify-content: center;
     align-content: center;
     flex-direction: column;
+    z-index: 5;
+}
+
+.arc {
+    z-index: 1;
 }
 
 .button {
