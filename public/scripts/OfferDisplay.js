@@ -15,7 +15,7 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
 
         if (offer.isValid) {
             var segment1 = continents[offer.offeringContinent] + ' is offering '
-            var segment2 = ' if you ';
+            var segment2 = ' if we ';
             var good = 'nothing';
             var bad = 'do nothing';
             if (offer.giveAgent) {
@@ -26,9 +26,9 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
                 good = offer.scienceToGive + ' scientist' + (offer.scienceToGive > 1 ?  's' : '');
             }
 
-            if (offer.removeAgent || offer.removeSquad) {
-                bad = 'remove your ' +
-                    (offer.removeAgent ? 'agent' : 'squad') + ' from ' +
+            if (offer.removeAgent || offer.removeSquads) {
+                bad = 'remove  our ' +
+                    (offer.removeAgent ? 'agent' : 'squads') + ' from ' +
                     continents[offer.offendingContinent] + ' for ' +
                     offer.duration + ' months';
             } else {
@@ -52,7 +52,7 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
             $('#offer_wait').show();
             $('#offer_cancel').hide();
         } else {
-            $('#offer_text').text("No offers were made this month. Commander, you might want to start doing something...");
+            $('#offer_text').text("No offers were made this month. Commander, we might want to start doing something...");
             $('#offer_accept').hide();
             $('#offer_wait').hide();
             $('#offer_cancel').show();

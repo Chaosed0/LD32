@@ -28,8 +28,8 @@ define(['jquery', './Util'], function($, u) {
         var strengthText = 'Strength: ' + stats.strength;
         var stabilityText = 'Stability: ' + stats.stability;
         var researchText = 'Scientists: ' + stats.science;
-        if (stats.hasSquad) {
-            strengthText += ' (+5)';
+        if (stats.squads > 0) {
+            strengthText += ' (+' + stats.squads * 5 + ')';
         }
 
         elem.append($('<p/>').text(strengthText));
@@ -50,8 +50,9 @@ define(['jquery', './Util'], function($, u) {
             elem.append($('<p/>').text('Agent protecting stability.').css('color', 'green'));
         }
 
-        if (stats.hasSquad) {
-            elem.append($('<p/>').text('Squadron boosting strength.').css('color', 'green'));
+        if (stats.squads > 0) {
+            elem.append($('<p/>').text('Strength boosted by ' + stats.squads + ' squad' +
+                        (stats.squads > 1 ? 's' : '') + '.').css('color', 'green'));
         }
 
         elem.append('<h2>Wars</h2>');

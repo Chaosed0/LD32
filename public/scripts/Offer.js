@@ -4,7 +4,7 @@ define(['jquery', './Util'], function($, u) {
         this.offeringContinent = null;
         this.offendingContinent = null;
         this.removeAgent = false;
-        this.removeSquad = false;
+        this.removeSquads = false;
         this.duration = 0;
         this.scienceToReceive = 0;
         
@@ -24,8 +24,8 @@ define(['jquery', './Util'], function($, u) {
     Offer.prototype.stillValid = function() {
         if (this.removeAgent && !this.continentStats[this.offendingContinent].hasAgent) {
             return 'Agent was withdrawn';
-        } else if (this.removeSquad && !this.continentStats[this.offendingContinent].hasSquad) {
-            return 'Squad was withdrawn';
+        } else if (this.removeSquads && !this.continentStats[this.offendingContinent].squads > 0) {
+            return 'Squads were withdrawn';
         } else if (this.playerStats.science < this.scienceToReceive) {
             return 'Not enough scientists';
         }
@@ -36,34 +36,34 @@ define(['jquery', './Util'], function($, u) {
         this.offeringContinent = offering;
         this.offendingContinent = offending;
         this.removeAgent = true;
-        this.duration = Math.floor(u.getRandom(2, 6));
 
         /* We can either offer a squad or a scientist */
-        var offerSquad = Math.round(Math.random());
+        var random = Math.random();
         var scienceOffering = this.duration;
         /* If we should offer a squad, or if we don't have enough science to give up, offer a squad */
-        if ((offerSquad == 1 && this.duration <= 3) || this.continentStats[offering].science < scienceOffering) {
+        if (random <= 0.5) {
             this.giveSquad = true;
+            this.duration = Math.floor(u.getRandom(1, 3));
         } else {
-            this.scienceToGive = scienceOffering;
+            this.duration = Math.floor(u.getRandom(1, 6));
+            this.scienceToGive = this.duration;
         }
     }
 
     Offer.prototype.randomSquadOffer = function(offering, offending) {
         this.offeringContinent = offering;
         this.offendingContinent = offending;
-        this.removeSquad = true;
-        this.duration = Math.floor(u.getRandom(1, 6));
+        this.removeSquads = true;
 
         /* We can either offer a squad or a scientist */
-        var offerSquad = Math.round(Math.random());
-        /* Offer at least one scientist */
-        var scienceOffering = Math.max(Math.floor(this.duration / 2), 1);
-        /* If we should offer a squad, or if we don't have enough science to give up, offer a squad */
-        if (offerSquad == 1 && this.duration >= 3 || this.continentStats[offering].science < scienceOffering) {
+        var random = Math.random();
+        var removedSquads = this.continentStats[offending].squads;
+        if (random <= 0.5) {
             this.giveSquad = true;
+            this.duration = Math.max(1, 4 - removedSquads);
         } else {
-            this.scienceToGive = scienceOffering;
+            this.duration = Math.floor(u.getRandom(1, 6));
+            this.scienceToGive = Math.max(0, Math.floor(this.duration / 2)) + removedSquads;
         }
     }
 
@@ -95,7 +95,7 @@ define(['jquery', './Util'], function($, u) {
                 var validOffenders = [];
                 for (var i = 0; i < this.continentStats.length; i++) {
                     if ((type == 0 && this.continentStats[i].hasAgent) ||
-                            (type == 1 && this.continentStats[i].hasSquad)) {
+                            (type == 1 && this.continentStats[i].squads > 0)) {
                         validOffenders.push(i);
                     }
                 }
@@ -149,12 +149,12 @@ define(['jquery', './Util'], function($, u) {
                     this.playerStats.agents++;
                 }
             }
-            if (this.removeSquad && stats.hasSquad) {
+            if (this.removeSquads && stats.squads > 0) {
                 stats.squadBlockedDuration = this.duration;
                 /* Ditto */
-                if (stats.hasSquad) {
-                    stats.hasSquad = false;
-                    this.playerStats.squads++;
+                if (stats.squads > 0) {
+                    this.playerStats.squads += stats.squads;
+                    stats.squads = 0;
                 }
             }
         }
@@ -167,7 +167,7 @@ define(['jquery', './Util'], function($, u) {
         if (this.giveSquad) {
             this.playerStats.squads++;
         }
-        this.continentStats[this.offeringContinent].science -= this.scienceToGive;
+        /* Continents can produce scientists out of thin air */
         this.playerStats.science += this.scienceToGive;
     }
 

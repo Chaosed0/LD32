@@ -3,11 +3,11 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
 
     var ContinentStats = function() {
         this.strength = Math.floor(u.getRandom(0, 10));
-        this.stability = Math.floor(u.getRandom(50, ContinentStats.maxStability));
+        this.stability = Math.floor(u.getRandom(40, ContinentStats.maxStability));
         this.science = Math.floor(u.getRandom(3, 6));
         this.progress = 0;
         this.hasAgent = false;
-        this.hasSquad = false;
+        this.squads = 0;
         this.agentBlockedDuration = 0;
         this.squadBlockedDuration = 0;
         this.wars = [];
@@ -15,10 +15,10 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
     }
 
     ContinentStats.squadStrength = 5;
-    ContinentStats.maxStability = 70;
+    ContinentStats.maxStability = 50;
 
     ContinentStats.prototype.getEffectiveStrength = function() {
-        return this.strength + this.hasSquad * ContinentStats.squadStrength;
+        return this.strength + this.squads * ContinentStats.squadStrength;
     }
 
     ContinentStats.prototype.isAtWar = function() {
