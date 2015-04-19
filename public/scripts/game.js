@@ -16,7 +16,7 @@ require(['jquery', './Util', './Constants',
     const initialWars = 3;
     const initialAgents = 1;
     const initialSquads = 2;
-    const initialScience = 5;
+    const initialScience = 7;
     const warInterval = 3;
 
     var continents = [
@@ -81,16 +81,13 @@ require(['jquery', './Util', './Constants',
     }
 
     var nextMonth = function() {
+        var conqueredContinent = null;
         month++;
         /* We want to log the new month before the new war */
         $(window).trigger("NewMonthLog", month);
 
         /* Add progress to the mind control bomb */
-        playerStats.progress += playerStats.science;
-        if (playerStats.progress >= 100) {
-            $(window).trigger('Victory', i);
-            return;
-        }
+        playerStats.progress = Math.min(playerStats.progress + playerStats.science, c.winProgress);
 
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
@@ -118,15 +115,16 @@ require(['jquery', './Util', './Constants',
             /* If a country has fallen, we lost */
             if (stats.stability <= 0) {
                 stats.conqueror = continents[stats.wars.indexOf(true)];
-                $(window).trigger('Defeat', i);
-                return;
+                conqueredContinent = i;
             }
         }
 
-        /* Add to stats only after we're done calculating war effects */
+        /* Modify stats only after we're done calculating war effects */
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
             stats.strength += Math.floor(u.getRandom(stats.science, stats.science));
+            stats.agentBlockedDuration = Math.max(0, stats.agentBlockedDuration-1);
+            stats.squadBlockedDuration = Math.max(0, stats.agentBlockedDuration-1);
 
             if (Math.random() >= 0.5) {
                 stats.science++;
@@ -143,6 +141,17 @@ require(['jquery', './Util', './Constants',
             offer = new Offer(continentStats, playerStats);
             offer.makeRandom();
             $(window).trigger('NewOffer', offer);
+        }
+
+        /* If we won, trigger victory and don't do offer */
+        if (conqueredContinent == null && playerStats.progress >= c.winProgress) {
+            $(window).trigger('Victory');
+            offer = null;
+        }
+        /* If we lost, trigger defeat and don't do offer */
+        if (conqueredContinent != null) {
+            $(window).trigger('Defeat', i);
+            offer = null;
         }
 
         $(window).trigger('NewMonth', {month: month, offer: offer});
@@ -171,7 +180,9 @@ require(['jquery', './Util', './Constants',
         ourBombProgress.setProgress(playerStats.progress);
 
         /* Show the offer */
-        OfferDisplay.showOffer(data.month, continents, data.offer);
+        if (data.offer !== null) {
+            OfferDisplay.showOffer(data.month, continents, data.offer);
+        }
     });
 
     var displayUI = function() {

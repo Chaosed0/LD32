@@ -69,10 +69,10 @@ define(['jquery', './Util'], function($, u) {
 
     Offer.prototype.randomScienceOffer = function(offerer) {
         this.offeringContinent = offerer;
-        this.scienceToReceive = Math.floor(u.getRandom(1, this.playerStats.science));
+        this.scienceToReceive = Math.floor(u.getRandom(1, (this.playerStats.science/2)));
 
         /* Start offering agents at a high enough science */
-        if (this.scienceToReceive <= Math.ceil(this.playerStats.science/2)) {
+        if (this.scienceToReceive <= Math.ceil(this.playerStats.science/4)) {
             this.giveSquad = true;
         } else {
             this.giveAgent = true;

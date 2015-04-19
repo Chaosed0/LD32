@@ -1,8 +1,8 @@
 
-define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
+define(['jquery', './Util', './Constants', './GameObj'], function($, u, c, GameObj) {
 
     var BombProgress = function(isMain, progress, continent) {
-        var bombProgress = GameObj('<progress value="70" max="100"></progress>');
+        var bombProgress = GameObj('<progress value="70" max="' + c.winProgress + '"></progress>');
         var progressLabel = GameObj('<div class="text-container"/>');
         var progressText = 'MIND CONTROL BOMB PROGRESS';
         if (!isMain) {
