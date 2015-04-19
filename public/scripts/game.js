@@ -61,15 +61,19 @@ require(['jquery', './Util', './GameObj',
 
     var newWar = function() {
         var first, second;
-        /* Potential for an infinite loop here if all countries are at war,
-         * but I'm fairly certain the game will never go on for that long */
+        var iterations = 0;
         do {
             first = Math.floor(u.getRandom(0, continents.length));
             second = Math.floor(u.getRandom(0, continents.length));
-        } while (first == second || continentStats[first].wars[second]);
-        continentStats[first].wars[second] = true;
-        continentStats[second].wars[first] = true;
-        $(window).trigger("NewWar", {first: first, second: second});
+            /* total cheating, just in case someone goes for the long war */
+            ++iterations;
+        } while ((first == second || continentStats[first].wars[second]) && iterations < 1000);
+
+        if (iterations < 1000) {
+            continentStats[first].wars[second] = true;
+            continentStats[second].wars[first] = true;
+            $(window).trigger("NewWar", {first: first, second: second});
+        }
     }
 
     var nextMonth = function() {
