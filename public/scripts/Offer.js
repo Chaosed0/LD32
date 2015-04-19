@@ -149,7 +149,7 @@ define(['jquery', './Util'], function($, u) {
                     this.playerStats.agents++;
                 }
             }
-            if (this.removeSquads && stats.squads > 0) {
+            if (this.removeSquads) {
                 stats.squadBlockedDuration = this.duration;
                 /* Ditto */
                 if (stats.squads > 0) {
