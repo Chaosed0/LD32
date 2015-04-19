@@ -27,7 +27,7 @@ define(['jquery', './Util'], function($, u) {
 
         var strengthText = 'Strength: ' + stats.strength;
         var stabilityText = 'Stability: ' + stats.stability;
-        var researchText = 'Research: ' + stats.science;
+        var researchText = 'Scientists: ' + stats.science;
         if (stats.hasSquad) {
             strengthText += ' (+5)';
         }

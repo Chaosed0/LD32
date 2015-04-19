@@ -18,9 +18,9 @@ define(['jquery', './Util'], function($, u) {
         this.playerStats = playerStats;
     }
 
-    /* Checks if the offer can still be fulfilled, e.g. if the
-     * player didn't withdraw an agent/squad but the offer
-     * included an agent/squad. */
+    /* Checks if the offer can still be fulfilled, e.g. if the player didn't
+     * withdraw an agent/squad but the offer included an agent/squad.
+     * Decided to take another approach, but keeping this around just in case */
     Offer.prototype.stillValid = function() {
         if (this.removeAgent && !this.continentStats[this.offendingContinent].hasAgent) {
             return 'Agent was withdrawn';
@@ -40,10 +40,12 @@ define(['jquery', './Util'], function($, u) {
 
         /* We can either offer a squad or a scientist */
         var offerSquad = Math.round(Math.random());
-        if (offerSquad == 1 && this.duration <= 3) {
+        var scienceOffering = this.duration;
+        /* If we should offer a squad, or if we don't have enough science to give up, offer a squad */
+        if ((offerSquad == 1 && this.duration <= 3) || this.continentStats[offering].science < scienceOffering) {
             this.giveSquad = true;
         } else {
-            this.scienceToGive = this.duration;
+            this.scienceToGive = scienceOffering;
         }
     }
 
@@ -55,11 +57,13 @@ define(['jquery', './Util'], function($, u) {
 
         /* We can either offer a squad or a scientist */
         var offerSquad = Math.round(Math.random());
-        if (offerSquad == 1 && this.duration >= 3) {
+        /* Offer at least one scientist */
+        var scienceOffering = Math.max(Math.floor(this.duration / 2), 1);
+        /* If we should offer a squad, or if we don't have enough science to give up, offer a squad */
+        if (offerSquad == 1 && this.duration >= 3 || this.continentStats[offering].science < scienceOffering) {
             this.giveSquad = true;
         } else {
-            /* Offer at least one scientist */
-            this.scienceToGive = Math.max(Math.floor(this.duration / 2), 1);
+            this.scienceToGive = scienceOffering;
         }
     }
 
@@ -134,16 +138,24 @@ define(['jquery', './Util'], function($, u) {
         if (this.offendingContinent !== null) {
             var stats = this.continentStats[this.offendingContinent];
             if (this.removeAgent) {
-                u.assert(stats.hasAgent === true);
-                stats.hasAgent = false;
                 stats.agentBlockedDuration = this.duration;
-                this.playerStats.agents++;
+                /* You might look at this and ask "what if the player didn't
+                 * have an agent on the continent?" We can be fairly sure they
+                 * had one on the continent at the time the offer was made, so
+                 * if they don't have one there now, they're probably withdrawn
+                 * it themselves already. We'll still block further agents. */
+                if (stats.hasAgent) {
+                    stats.hasAgent = false;
+                    this.playerStats.agents++;
+                }
             }
-            if (this.removeSquad) {
-                u.assert(stats.hasSquad === true);
-                stats.hasSquad = false;
+            if (this.removeSquad && stats.hasSquad) {
                 stats.squadBlockedDuration = this.duration;
-                this.playerStats.squads++;
+                /* Ditto */
+                if (stats.hasSquad) {
+                    stats.hasSquad = false;
+                    this.playerStats.squads++;
+                }
             }
         }
         this.continentStats[this.offeringContinent].science += this.scienceToReceive;
@@ -155,6 +167,7 @@ define(['jquery', './Util'], function($, u) {
         if (this.giveSquad) {
             this.playerStats.squads++;
         }
+        this.continentStats[this.offeringContinent].science -= this.scienceToGive;
         this.playerStats.science += this.scienceToGive;
     }
 

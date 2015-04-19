@@ -123,10 +123,14 @@ require(['jquery', './Util', './Constants',
             }
         }
 
-        /* Add to strength only after we're done calculating war effects */
+        /* Add to stats only after we're done calculating war effects */
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
             stats.strength += Math.floor(u.getRandom(stats.science, stats.science));
+
+            if (Math.random() >= 0.5) {
+                stats.science++;
+            }
         }
 
         /* Every so often, a new war breaks out */
