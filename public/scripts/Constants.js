@@ -16,5 +16,6 @@ define(function() {
         'December'
     ];
     c.startYear = 2034;
+    c.maxStability = 50;
     return c;
 });

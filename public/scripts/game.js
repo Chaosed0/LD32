@@ -1,5 +1,6 @@
 
-require(['jquery', './Util', './GameObj',
+require(['jquery', './Util', './Constants',
+        './GameObj',
         './StatDisplay',
         './ActionDisplay',
         './BombProgress',
@@ -8,7 +9,7 @@ require(['jquery', './Util', './GameObj',
         './Log',
         './Arc',
         './Offer',
-        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, OfferDisplay, ContinentStats, Log, Arc, Offer) {
+        ], function($, u, c, GameObj, StatDisplay, ActionDisplay, BombProgress, OfferDisplay, ContinentStats, Log, Arc, Offer) {
 
     var self = this;
 
@@ -47,6 +48,7 @@ require(['jquery', './Util', './GameObj',
     }
 
     var month = 0;
+    var offer = 0;
     var log = new Log($('#log'), continents);
     /* Log the first month */
     $(window).trigger("NewMonthLog", month);
@@ -133,10 +135,9 @@ require(['jquery', './Util', './GameObj',
         }
 
         /* A new offer is made every turn other than turn 0 */
-        var offer = null;
         if (month != 0) {
-            offer = new Offer();
-            offer.makeRandom(continentStats, playerStats);
+            offer = new Offer(continentStats, playerStats);
+            offer.makeRandom();
             $(window).trigger('NewOffer', offer);
         }
 
@@ -186,7 +187,7 @@ require(['jquery', './Util', './GameObj',
         var stability = continentStats[index].stability;
         var other;
         if (stability > 0) {
-            other = Math.floor(200*continentStats[index].stability/100 + 55);
+            other = Math.floor(255*continentStats[index].stability/c.maxStability);
         } else {
             other = 0;
         }

@@ -1,6 +1,6 @@
 
 define(['jquery', './Util'], function($, u) {
-    var Offer = function() {
+    var Offer = function(continentStats, playerStats) {
         this.offeringContinent = null;
         this.offendingContinent = null;
         this.removeAgent = false;
@@ -13,9 +13,12 @@ define(['jquery', './Util'], function($, u) {
         this.scienceToGive = 0;
 
         this.isValid = false;
+
+        this.continentStats = continentStats;
+        this.playerStats = playerStats;
     }
 
-    Offer.prototype.randomAgentOffer = function(continentStats, offering, offending) {
+    Offer.prototype.randomAgentOffer = function(offering, offending) {
         this.offeringContinent = offering;
         this.offendingContinent = offending;
         this.removeAgent = true;
@@ -30,7 +33,7 @@ define(['jquery', './Util'], function($, u) {
         }
     }
 
-    Offer.prototype.randomSquadOffer = function(continentStats, offering, offending) {
+    Offer.prototype.randomSquadOffer = function(offering, offending) {
         this.offeringContinent = offering;
         this.offendingContinent = offending;
         this.removeSquad = true;
@@ -45,19 +48,19 @@ define(['jquery', './Util'], function($, u) {
         }
     }
 
-    Offer.prototype.randomScienceOffer = function(continentStats, playerStats, offerer) {
+    Offer.prototype.randomScienceOffer = function(offerer) {
         this.offeringContinent = offerer;
-        this.scienceToReceive = Math.floor(u.getRandom(1, playerStats.science));
+        this.scienceToReceive = Math.floor(u.getRandom(1, this.playerStats.science));
 
         /* Start offering agents at a high enough science */
-        if (this.scienceToReceive <= Math.ceil(playerStats.science/2)) {
+        if (this.scienceToReceive <= Math.ceil(this.playerStats.science/2)) {
             this.giveSquad = true;
         } else {
             this.giveAgent = true;
         }
     }
 
-    Offer.prototype.makeRandom = function(continentStats, playerStats) {
+    Offer.prototype.makeRandom = function() {
         var madeOffer = false;
         var invalidOffer = [false, false, false];
         while (!madeOffer) {
@@ -71,9 +74,9 @@ define(['jquery', './Util'], function($, u) {
                 /* Remove squad or agent from offending nation */
                 /* First, figure out which continents have agents on them */
                 var validOffenders = [];
-                for (var i = 0; i < continentStats.length; i++) {
-                    if ((type == 0 && continentStats[i].hasAgent) ||
-                            (type == 1 && continentStats[i].hasSquad)) {
+                for (var i = 0; i < this.continentStats.length; i++) {
+                    if ((type == 0 && this.continentStats[i].hasAgent) ||
+                            (type == 1 && this.continentStats[i].hasSquad)) {
                         validOffenders.push(i);
                     }
                 }
@@ -81,23 +84,23 @@ define(['jquery', './Util'], function($, u) {
                 u.shuffleArray(validOffenders);
                 for (var i = 0; i < validOffenders.length; i++) {
                     /* Find someone at war with the offender */
-                    var validOfferers = continentStats[validOffenders[i]].getWars();
+                    var validOfferers = this.continentStats[validOffenders[i]].getWars();
                     if (validOfferers.length > 0) {
                         var offerer = u.randomElem(validOfferers);
                         var offender = validOffenders[i];
                         if (type == 0) {
-                            this.randomAgentOffer(continentStats, offerer, offender);
+                            this.randomAgentOffer(offerer, offender);
                         } else {
-                            this.randomSquadOffer(continentStats, offerer, offender);
+                            this.randomSquadOffer(offerer, offender);
                         }
                         madeOffer = true;
                     }
                 }
             } else {
                 /* Receive scientists for squad or agent; any nation can do this */
-                if (playerStats.science > 0) {
-                    var offerer = Math.floor(u.getRandom(continentStats.length));
-                    this.randomScienceOffer(continentStats, playerStats, offerer);
+                if (this.playerStats.science > 0) {
+                    var offerer = Math.floor(u.getRandom(this.continentStats.length));
+                    this.randomScienceOffer(offerer);
                     madeOffer = true;
                 }
             }
@@ -112,32 +115,32 @@ define(['jquery', './Util'], function($, u) {
         this.isValid = true;
     }
 
-    Offer.prototype.accept = function(continentStats, playerStats) {
+    Offer.prototype.accept = function() {
         if (this.offendingContinent !== null) {
-            var stats = continentStats[this.offendingContinent];
+            var stats = this.continentStats[this.offendingContinent];
             if (this.removeAgent) {
                 u.assert(stats.hasAgent === true);
                 stats.hasAgent = false;
                 stats.agentBlockedDuration = this.duration;
-                playerStats.agents++;
+                this.playerStats.agents++;
             }
             if (this.removeSquad) {
                 u.assert(stats.hasSquad === true);
                 stats.hasSquad = false;
                 stats.squadBlockedDuration = this.duration;
-                playerStats.squads++;
+                this.playerStats.squads++;
             }
         }
-        continentStats[this.offeringContinent].science += this.scienceToReceive;
-        playerStats.science -= this.scienceToReceive;
+        this.continentStats[this.offeringContinent].science += this.scienceToReceive;
+        this.playerStats.science -= this.scienceToReceive;
 
         if (this.giveAgent) {
-            playerStats.agents++;
+            this.playerStats.agents++;
         }
         if (this.giveSquad) {
-            playerStats.squads++;
+            this.playerStats.squads++;
         }
-        playerStats.science += this.scienceToGive;
+        this.playerStats.science += this.scienceToGive;
     }
 
     return Offer;
