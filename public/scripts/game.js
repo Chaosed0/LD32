@@ -44,7 +44,7 @@ require(['jquery', './Util', './GameObj',
     }
 
     var month = 0;
-    var log = new Log(continents);
+    var log = new Log($('#log'), continents);
     /* Log the first month */
     $(window).trigger("NewMonth", month);
 

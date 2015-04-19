@@ -3,10 +3,11 @@ define(['jquery', './Util'], function($, u) {
 
     var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    var Log = function(continents) {
+    var Log = function(logElem, continents) {
         var self = this;
         this.continents = continents;
         this.year = 2034;
+        this.log = logElem;
 
         $(window).bind("NewMonth", function(e, month) {
             if (month != 0 && month%12 == 0) {
@@ -26,20 +27,18 @@ define(['jquery', './Util'], function($, u) {
             self.message(message);
         });
         $(window).bind("UIDisplay", function() {
-            var log = $('#log');
-            log.scrollTop(log[0].scrollHeight);
+            self.log.scrollTop(self.log[0].scrollHeight);
         });
     }
 
     Log.prototype.maxMessages = 50;
 
     Log.prototype.message = function(message) {
-        var log = $('#log');
-        log.append(message);
-        if (log.children().length > this.maxMessages) {
-            log.find('p:first').remove();
+        this.log.append(message);
+        if (this.log.children().length > this.maxMessages) {
+            this.log.find('p:first').remove();
         }
-        log.scrollTop(log[0].scrollHeight);
+        this.log.scrollTop(this.log[0].scrollHeight);
     }
     
     return Log;
