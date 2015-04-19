@@ -3,8 +3,8 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
 
     var ContinentStats = function() {
         this.strength = Math.floor(u.getRandom(0, 10));
-        this.stability = Math.floor(u.getRandom(35, c.maxStability));
-        this.science = Math.floor(u.getRandom(3, 7));
+        this.stability = Math.floor(u.getRandom(80, ContinentStats.maxStability));
+        this.science = Math.floor(u.getRandom(3, 6));
         this.progress = 0;
         this.hasAgent = false;
         this.hasSquad = false;
@@ -15,6 +15,7 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
     }
 
     ContinentStats.squadStrength = 5;
+    ContinentStats.maxStability = 100;
 
     ContinentStats.prototype.getEffectiveStrength = function() {
         return this.strength + this.hasSquad * ContinentStats.squadStrength;

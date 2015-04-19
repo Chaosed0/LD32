@@ -18,6 +18,20 @@ define(['jquery', './Util'], function($, u) {
         this.playerStats = playerStats;
     }
 
+    /* Checks if the offer can still be fulfilled, e.g. if the
+     * player didn't withdraw an agent/squad but the offer
+     * included an agent/squad. */
+    Offer.prototype.stillValid = function() {
+        if (this.removeAgent && !this.continentStats[this.offendingContinent].hasAgent) {
+            return 'Agent was withdrawn';
+        } else if (this.removeSquad && !this.continentStats[this.offendingContinent].hasSquad) {
+            return 'Squad was withdrawn';
+        } else if (this.playerStats.science < this.scienceToReceive) {
+            return 'Not enough scientists';
+        }
+        return true;
+    }
+
     Offer.prototype.randomAgentOffer = function(offering, offending) {
         this.offeringContinent = offering;
         this.offendingContinent = offending;

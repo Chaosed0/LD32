@@ -42,11 +42,20 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
             $('#offer_text').append(segment1).append(goodSpan).append(segment2).append(badSpan).append('.');
 
             $('#offer_accept').unbind('click');
-            $('#offer_accept').on('click', function() {
-                $('#offer_accept').unbind('click');
-                $('#offer_modal').hide();
-                $(window).trigger('OfferAccept', offer);
-            });
+            var valid = offer.stillValid();
+            /* The player might have invalidated the offer, e.g. by moving agents or squads */
+            if (valid === true) {
+                $('#offer_accept').text('I accept');
+                $('#offer_accept').prop('disabled', false);
+                $('#offer_accept').on('click', function() {
+                    $('#offer_accept').unbind('click');
+                    $('#offer_modal').hide();
+                    $(window).trigger('OfferAccept', offer);
+                });
+            } else {
+                $('#offer_accept').text(valid);
+                $('#offer_accept').prop('disabled', true);
+            }
 
             $('#offer_accept').show();
             $('#offer_wait').show();
@@ -58,10 +67,6 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
             $('#offer_cancel').show();
         }
 
-        this.show();
-    }
-
-    OfferDisplay.show = function() {
         $('#offer_modal').show();
     }
 

@@ -187,7 +187,7 @@ require(['jquery', './Util', './Constants',
         var stability = continentStats[index].stability;
         var other;
         if (stability > 0) {
-            other = Math.floor(255*continentStats[index].stability/c.maxStability);
+            other = Math.floor(255*continentStats[index].stability/ContinentStats.maxStability);
         } else {
             other = 0;
         }
@@ -264,7 +264,7 @@ require(['jquery', './Util', './Constants',
     viewOfferButton.width(150);
     viewOfferButton.height(25);
     viewOfferButton.setPos($(window).width() - nextMonthButton.width() - 20, 20);
-    viewOfferButton.click(OfferDisplay.show);
+    viewOfferButton.click(function() { OfferDisplay.showOffer(month, continents, offer); });
     viewOfferButton.hide();
     $('#map_container').append(viewOfferButton);
 
