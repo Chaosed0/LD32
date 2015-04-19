@@ -9,7 +9,7 @@ define(['jquery', './Util'], function($, u) {
 
     ActionDisplay.displayActions = function(continentStats, playerStats) {
         elem.empty();
-        elem.append('<h1>X-MOC HQ</h1>');
+        elem.append('<h1>S-COM HQ</h1>');
         var resourcesText = 'Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads + ' | Scientists: ' + playerStats.science;
 
         elem.append($('<p/>').text(resourcesText).css({'font-size': '12px', 'margin-bottom': '3px'}));
