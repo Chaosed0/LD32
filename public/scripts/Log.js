@@ -20,11 +20,12 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
                 .append('!');
             self.message(message);
         });
+        $(window).bind("OfferAccept", function(e, offer) {
+            self.message($('<p>You accepted ' + self.continents[offer.offeringContinent] + '\'s offer.</p>')
+                    .css('color', '#0d0'));
+        });
         $(window).bind("UIDisplay", function() {
             self.log.scrollTop(self.log[0].scrollHeight);
-        });
-        $(window).bind("OfferAccept", function(e, offer) {
-            self.message($('<p>You accepted ' + self.continents[offer.offeringContinent] + '\'s offer.'));
         });
     }
 
