@@ -21,7 +21,9 @@ define(['jquery', './Util'], function($, u) {
     ActionDisplay.displayActions = function(continentStats, playerStats) {
         elem.empty();
         elem.append('<h1>X-MOC HQ</h1>');
-        elem.append($('<p/>').text('Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads));
+        var resourcesText = 'Agents: ' + playerStats.agents + ' | Squads: ' + playerStats.squads + ' | Scientists: ' + playerStats.science;
+
+        elem.append($('<p/>').text(resourcesText).css({'font-size': '12px', 'margin-bottom': '3px'}));
 
         if (continentStats === undefined) {
             return;
@@ -29,6 +31,7 @@ define(['jquery', './Util'], function($, u) {
         var self = this;
         var agentsButton = $('<button type="button" class="button"/>');
         var squadButton = $('<button type="button" class="button"/>');
+        var scientistsButton = $('<button type="button" class="button"/>');
 
         if (continentStats.hasAgent) {
             agentsButton.text("Withdraw Agent");
@@ -67,10 +70,22 @@ define(['jquery', './Util'], function($, u) {
                 ActionDisplay.actionCallback();
             });
         }
+
+        if (playerStats.science <= 0) {
+            scientistsButton.text("No Scientists");
+            scientistsButton.prop("disabled", true);
+        } else {
+            scientistsButton.text("Send Scientist");
+            scientistsButton.click(function() {
+                continentStats.science++;
+                playerStats.science--;
+                ActionDisplay.actionCallback();
+            });
+        }
         
-        elem.append(agentsButton);
-        elem.append('<br/>');
-        elem.append(squadButton);
+        elem.append($('<div/>').append(agentsButton));
+        elem.append($('<div/>').append(squadButton));
+        elem.append($('<div/>').append(scientistsButton));
     }
 
     return ActionDisplay;

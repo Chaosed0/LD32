@@ -27,12 +27,14 @@ define(['jquery', './Util'], function($, u) {
 
         var strengthText = 'Strength: ' + stats.strength;
         var stabilityText = 'Stability: ' + stats.stability;
+        var researchText = 'Research: ' + stats.science;
         if (stats.hasSquad) {
             strengthText += ' (+5)';
         }
 
         elem.append($('<p/>').text(strengthText));
         elem.append($('<p/>').text(stabilityText));
+        elem.append($('<p/>').text(researchText));
 
         if (stats.hasAgent) {
             elem.append($('<p/>').text('Agent protecting stability.').css('color', 'green'));

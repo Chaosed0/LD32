@@ -1,9 +1,6 @@
 
 define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
 
-    const leftPadding = 290;
-    const rightPadding = 200;
-
     var BombProgress = function(isMain, progress, continent) {
         var bombProgress = GameObj('<progress value="70" max="100"></progress>');
         var progressLabel = GameObj('<div class="text-container"/>');
@@ -14,6 +11,9 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
         }
         progressLabel.text(progressText);
         var valueLabel = GameObj('<div class="text-container"/>');
+
+        const leftPadding = $('#sidebar').width() + 40;
+        const rightPadding = 200;
 
         $('#map_container').append(bombProgress);
         $('#map_container').append(progressLabel);

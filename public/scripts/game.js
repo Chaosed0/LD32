@@ -81,7 +81,7 @@ require(['jquery', './Util', './GameObj',
 
                 var relativeStrength = stats.getEffectiveStrength() - continentStats[j].getEffectiveStrength();
                 /* If no agent on continent, subtract relative strength from stability */
-                if (!stats.hasAgent || relativeStrength < 0) {
+                if (!stats.hasAgent && relativeStrength < 0) {
                     stats.stability += relativeStrength;
                 }
                 ++numWars;
