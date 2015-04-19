@@ -11,12 +11,20 @@ define(['jquery', './Util', './GameObj'], function($, u, GameObj) {
         this.position = position;
         this.size = size;
 
+        if (p1.y > p2.y) {
+            var tmp = p1;
+            p1 = p2;
+            p2 = tmp;
+        }
+
+        var distance = Math.sqrt(size.w * size.w + size.h * size.h);
+
         var midpoint = { x: position.x + size.w/2, y: position.y + size.h/2 };
         var normalSlope = { x: p1.y - p2.y, y: p2.x - p1.x };
         var magnitude = Math.sqrt(normalSlope.x*normalSlope.x + normalSlope.y*normalSlope.y);
         normalSlope.x /= magnitude;
         normalSlope.y /= magnitude;
-        var cp = { x: midpoint.x + normalSlope.x * 100, y: midpoint.y + normalSlope.y * 100 };
+        var cp = { x: midpoint.x + normalSlope.x * Math.sqrt(distance)*2, y: midpoint.y + normalSlope.y * Math.sqrt(distance)*2 };
 
         this.canvas.setPos(Math.floor(position.x - padding), Math.floor(position.y - padding));
         this.canvas[0].width = Math.floor(size.w + padding * 2);
