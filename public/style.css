@@ -120,6 +120,15 @@ p {
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
 }
 
+#help_modal > div {
+    margin: 10% auto;
+    text-justify: inter-word;
+}
+
+#help_modal p {
+    margin-bottom: 5px;
+}
+
 progress {
     -webkit-appearance: none;
     -moz-appearance: none;

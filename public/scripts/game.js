@@ -278,10 +278,19 @@ require(['jquery', './Util', './Constants',
     viewOfferButton.text("VIEW CURRENT OFFER");
     viewOfferButton.width(150);
     viewOfferButton.height(25);
-    viewOfferButton.setPos($(window).width() - nextMonthButton.width() - 20, 20);
+    viewOfferButton.setPos($('#sidebar').width() + 25, 20);
     viewOfferButton.click(function() { OfferDisplay.showOffer(month, continents, offer); });
     viewOfferButton.hide();
     $('#map_container').append(viewOfferButton);
+
+    var viewHelp = GameObj('<button type="button" class="button"/>');
+    viewHelp.text("?");
+    viewHelp.width(25);
+    viewHelp.height(25);
+    viewHelp.setPos($(window).width() - viewHelp.width() - 20, 20);
+    viewHelp.click(function() { $('#help_modal').show() });
+    $('#hide_help').click(function() { $('#help_modal').hide() });
+    $('#map_container').append(viewHelp);
 
     /* Show the button on a new offer; hide it when an offer is accepted */
     $(window).on("NewOffer", function() { viewOfferButton.show(); });
