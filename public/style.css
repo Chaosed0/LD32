@@ -107,7 +107,6 @@ p {
     background: rgba(0,0,0,0.5);
     display: none;
     z-index: 99999;
-    pointer-events: none;
 }
 
 .modal > div {
