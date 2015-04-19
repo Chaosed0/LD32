@@ -37,17 +37,13 @@ define(['jquery', './Util'], function($, u) {
         elem.append($('<p/>').text(researchText));
 
         if (stats.agentBlockedDuration > 0) {
-            elem.append($('<p/>').css('color', '#a00')
-                    .append('Agents blocked here for ')
-                    .append($('<span/>').text(stats.agentBlockedDuration).css('color', '#f00'))
-                    .append(' more turns.'));
+            elem.append($('<p/>').css('color', '#f00')
+                    .text('Agents blocked here for ' + stats.agentBlockedDuration + ' more turns.'));
         }
 
         if (stats.squadBlockedDuration > 0) {
-            elem.append($('<p/>').css('color', '#a00')
-                    .append('Squads blocked here for ')
-                    .append($('<span/>').text(stats.squadBlockedDuration).css('color', '#f00'))
-                    .append(' more turns.'));
+            elem.append($('<p/>').css('color', '#f00')
+                    .text('Squads blocked here for ' + stats.squadBlockedDuration + ' more turns.'));
         }
 
         if (stats.hasAgent) {
