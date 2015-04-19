@@ -124,7 +124,7 @@ require(['jquery', './Util', './Constants',
             var stats = continentStats[i];
             stats.strength += Math.floor(u.getRandom(stats.science, stats.science));
             stats.agentBlockedDuration = Math.max(0, stats.agentBlockedDuration-1);
-            stats.squadBlockedDuration = Math.max(0, stats.agentBlockedDuration-1);
+            stats.squadBlockedDuration = Math.max(0, stats.squadBlockedDuration-1);
 
             if (Math.random() >= 0.5) {
                 stats.science++;
