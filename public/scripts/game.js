@@ -38,6 +38,7 @@ require(['jquery', './Util', './Constants',
     ];
 
     var labels = [];
+    var labelFlashes = [];
     var continentStats = [];
 
     var playerStats = {
@@ -197,16 +198,54 @@ require(['jquery', './Util', './Constants',
     $(window).on('OfferAccept', displayUI);
     $(window).on('ActionTaken', displayUI);
 
+    var flashLabel = function(label) {
+        /* Cross-browser color comparison, what a hack */
+        var red = $('<p>').css('color', '#f00').css('color');
+        if (label.css('color') == red) {
+            label.css('color', '#ddd');
+        } else {
+            label.css('color', '#f00');
+        }
+    }
+
     var reddenLabel = function(index) {
         var label = labels[index];
-        var stability = continentStats[index].stability;
-        var other;
-        if (stability > 0) {
-            other = Math.floor(255*continentStats[index].stability/ContinentStats.maxStability);
-        } else {
-            other = 0;
+        var stats = continentStats[index];
+        var stability = stats.stability;
+
+        /* Check if the continent is about to fall */
+        var totalStabilityLoss = 0;
+        if (!stats.hasAgent) {
+            /* If the continent has an agent, we know it isn't going to fall */
+            for (var i = 0; i < stats.wars.length; i++) {
+                if (stats.wars[i] === true) {
+                    var relativeStrength = stats.getEffectiveStrength() -
+                        continentStats[i].getEffectiveStrength();
+                    if (relativeStrength < 0) {
+                        totalStabilityLoss += relativeStrength;
+                    }
+                }
+            }
         }
-        label.css('color', 'rgba(255,' + other + ',' + other + ',1.0)');
+
+        if (stats.stability + totalStabilityLoss < 0) {
+            flashLabel(labels[index]);
+            /* Don't set interval again if we're already flashing */
+            if (labelFlashes[index] === null) {
+                /* Flash the label - we're about to fall */
+                labelFlashes[index] = setInterval(function() { flashLabel(labels[index]); }, 1000);
+            }
+        } else if (labelFlashes[index] !== null) {
+            /* If the label was flashing before, stop it */
+            clearInterval(labelFlashes[index]);
+            labelFlashes[index] = null;
+        }
+
+        if (labelFlashes[index] === null) {
+            /* Not flashing - Calculate the solid color */
+            var notRed = Math.floor(255*stats.stability/ContinentStats.maxStability);
+            label.css('color', 'rgba(255,' + notRed + ',' + notRed + ',1.0)');
+        }
     }
 
     for (var i = 0; i < continents.length; i++) {
@@ -233,14 +272,18 @@ require(['jquery', './Util', './Constants',
         label.setPos(map.position.x + map.width() * position.x - label.width()/2,
                      map.position.y + map.height() * position.y - label.height()/2);
         labels.push(label);
+        labelFlashes.push(null);
     }
 
-    $(window).on("NewMonth", function(e) {
+    var reddenAllLabels = function() {
         for (var i = 0; i < continents.length; i++) {
             var label = labels[i];
             reddenLabel(i);
         }
-    });
+    }
+
+    $(window).on('ActionTaken', reddenAllLabels);
+    $(window).on("NewMonth", reddenAllLabels);
 
     $(window).on('Victory', function(e) {
         $('#victory_modal').show();
