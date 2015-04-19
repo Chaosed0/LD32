@@ -145,12 +145,12 @@ require(['jquery', './Util', './Constants',
         }
 
         /* If we won, trigger victory and don't do offer */
-        if (conqueredContinent == null && playerStats.progress >= c.winProgress) {
+        if (playerStats.progress >= c.winProgress) {
             $(window).trigger('Victory');
             offer = null;
         }
         /* If we lost, trigger defeat and don't do offer */
-        if (conqueredContinent != null) {
+        if (playerStats.progress < c.winProgress && conqueredContinent != null) {
             $(window).trigger('Defeat', conqueredContinent);
             offer = null;
         }
@@ -286,6 +286,17 @@ require(['jquery', './Util', './Constants',
     $(window).on("NewMonth", reddenAllLabels);
 
     $(window).on('Victory', function(e) {
+        var lowestStability = continentStats[0].stability;
+        var leastStableContinent = 0;
+        for (var i = 1; i < continentStats.length; i++) {
+            if (continentStats[i].stability < lowestStability) {
+                lowestStability = continentStats[i].stability;
+                leastStableContinent = i;
+            }
+        }
+        $('#victory_stats').append('<b>Months taken:</b> ' + month + ' | ')
+            .append('<b>Lowest stability:</b> ' + continents[leastStableContinent] +
+                    ' (' + lowestStability + ')');
         $('#victory_modal').show();
     });
 
