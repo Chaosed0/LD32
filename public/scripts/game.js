@@ -324,7 +324,7 @@ require(['jquery', './Util', './Constants',
 
     var viewOfferButton = GameObj('<button type="button" class="button"/>');
     viewOfferButton.text("VIEW CURRENT OFFER");
-    viewOfferButton.width(150);
+    viewOfferButton.width(180);
     viewOfferButton.height(25);
     viewOfferButton.setPos($('#sidebar').width() + 25, 20);
     viewOfferButton.click(function() { OfferDisplay.showOffer(month, continents, offer); });
