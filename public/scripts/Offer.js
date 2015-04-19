@@ -41,10 +41,11 @@ define(['jquery', './Util'], function($, u) {
 
         /* We can either offer a squad or a scientist */
         var offerSquad = Math.round(Math.random());
-        if (offerSquad == 1 && duration >= 3) {
+        if (offerSquad == 1 && this.duration >= 3) {
             this.giveSquad = true;
         } else {
-            this.scienceToGive = Math.floor(this.duration / 2);
+            /* Offer at least one scientist */
+            this.scienceToGive = Math.max(Math.floor(this.duration / 2), 1);
         }
     }
 
