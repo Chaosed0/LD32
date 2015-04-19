@@ -4,7 +4,8 @@ require(['jquery', './Util', './GameObj',
         './ActionDisplay',
         './BombProgress',
         './ContinentStats',
-        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, ContinentStats) {
+        './Log',
+        ], function($, u, GameObj, StatDisplay, ActionDisplay, BombProgress, ContinentStats, Log) {
 
     var self = this;
 
@@ -12,6 +13,7 @@ require(['jquery', './Util', './GameObj',
     const initialAgents = 1;
     const initialSquads = 2;
     const initialScience = 5;
+    const warInterval = 3;
 
     var continents = [
         'North America',
@@ -41,6 +43,11 @@ require(['jquery', './Util', './GameObj',
         progress: 0
     }
 
+    var month = 0;
+    var log = new Log(continents);
+    /* Log the first month */
+    $(window).trigger("NewMonth", month);
+
     for (var i = 0; i < continents.length; i++) {
         continentStats.push(new ContinentStats());
     }
@@ -51,18 +58,27 @@ require(['jquery', './Util', './GameObj',
         }
     }
 
+    var newWar = function() {
+        var first, second;
+        /* Potential for an infinite loop here if all countries are at war,
+         * but I'm fairly certain the game will never go on for that long */
+        do {
+            first = Math.floor(u.getRandom(0, continents.length));
+            second = Math.floor(u.getRandom(0, continents.length));
+        } while (first == second || continentStats[first].wars[second]);
+        continentStats[first].wars[second] = true;
+        continentStats[second].wars[first] = true;
+        $(window).trigger("NewWar", {first: first, second: second});
+    }
+
     for(var i = 0; i < initialWars; i++) {
-        var first = Math.floor(u.getRandom(0, continents.length));
-        var second = Math.floor(u.getRandom(0, continents.length));
-        if (first != second && !continentStats[first].wars[second]) {
-            continentStats[first].wars[second] = true;
-            continentStats[second].wars[first] = true;
-        } else {
-            --i;
-        }
+        newWar();
     }
 
     var nextMonth = function() {
+        month++;
+        $(window).trigger("NewMonth", month);
+
         playerStats.progress += playerStats.science;
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
@@ -118,7 +134,10 @@ require(['jquery', './Util', './GameObj',
             stats.strength += Math.floor(u.getRandom(stats.science, stats.science));
         }
 
-        $(window).trigger("NewMonth");
+        /* Every so often, a new war breaks out */
+        if (month != 0 && month % warInterval == 0) {
+            newWar();
+        }
     }
 
     var mainWidth = $('#map_container').width();
@@ -144,6 +163,7 @@ require(['jquery', './Util', './GameObj',
     var displayUI = function() {
         StatDisplay.displayStats(continents, continentStats, selectedContinent);
         ActionDisplay.displayActions(continentStats[selectedContinent], playerStats)
+        $(window).trigger("UIDisplay");
     };
     /* Display the UI */
     displayUI();
@@ -170,7 +190,10 @@ require(['jquery', './Util', './GameObj',
 
         (function() {
             var index = i;
-            label.mousedown(function() { selectedContinent = index; displayUI(); });
+            label.mousedown(function() {
+                selectedContinent = index;
+                displayUI();
+            });
 
             label.hover(function() {
                 $(this).css('color', '#0000FF');
