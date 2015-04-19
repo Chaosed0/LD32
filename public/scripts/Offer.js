@@ -11,6 +11,8 @@ define(['jquery', './Util'], function($, u) {
         this.giveAgent = false;
         this.giveSquad = false;
         this.scienceToGive = 0;
+
+        this.isValid = false;
     }
 
     Offer.prototype.randomAgentOffer = function(continentStats, offering, offending) {
@@ -93,13 +95,21 @@ define(['jquery', './Util'], function($, u) {
                 }
             } else {
                 /* Receive scientists for squad or agent; any nation can do this */
-                var offerer = Math.floor(u.getRandom(continentStats.length));
-                this.randomScienceOffer(continentStats, playerStats, offerer);
-                madeOffer = true;
+                if (playerStats.science > 0) {
+                    var offerer = Math.floor(u.getRandom(continentStats.length));
+                    this.randomScienceOffer(continentStats, playerStats, offerer);
+                    madeOffer = true;
+                }
             }
 
             invalidOffer[type] = !madeOffer;
+
+            if (invalidOffer.indexOf(false) == -1) {
+                /* No offers could be made */
+                return;
+            }
         }
+        this.isValid = true;
     }
 
     Offer.prototype.accept = function(continentStats, playerStats) {

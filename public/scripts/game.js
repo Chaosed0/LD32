@@ -250,13 +250,26 @@ require(['jquery', './Util', './GameObj',
     });
 
     var nextMonthButton = GameObj('<button type="button" class="button"/>');
-    nextMonthButton.text("COMMIT");
+    nextMonthButton.text("NEXT MONTH");
     nextMonthButton.width(150);
     nextMonthButton.height(50);
     nextMonthButton.setPos($(window).width() - nextMonthButton.width() - 20,
                            $(window).height() - nextMonthButton.height() - 20);
     nextMonthButton.click(nextMonth);
     $('#map_container').append(nextMonthButton);
+
+    var viewOfferButton = GameObj('<button type="button" class="button"/>');
+    viewOfferButton.text("VIEW CURRENT OFFER");
+    viewOfferButton.width(150);
+    viewOfferButton.height(25);
+    viewOfferButton.setPos($(window).width() - nextMonthButton.width() - 20, 20);
+    viewOfferButton.click(OfferDisplay.show);
+    viewOfferButton.hide();
+    $('#map_container').append(viewOfferButton);
+
+    /* Show the button on a new offer; hide it when an offer is accepted */
+    $(window).on("NewOffer", function() { viewOfferButton.show(); });
+    $(window).on("OfferAccept", function() { viewOfferButton.hide(); });
 
     /* Initialize wars */
     for(var i = 0; i < initialWars; i++) {
