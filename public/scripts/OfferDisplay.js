@@ -52,7 +52,7 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
             $('#offer_wait').show();
             $('#offer_cancel').hide();
         } else {
-            $('#offer_text').text("No offers were made this month. Commander, we might want to start doing something...");
+            $('#offer_text').text("No offers were made this month.");
             $('#offer_accept').hide();
             $('#offer_wait').hide();
             $('#offer_cancel').show();

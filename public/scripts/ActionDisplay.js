@@ -22,6 +22,7 @@ define(['jquery', './Util'], function($, u) {
         var squadButton = $('<button type="button" class="button"/>');
         var withdrawButton = $('<button type="button" class="button"/>');
         var scientistsButton = $('<button type="button" class="button"/>');
+        var withdrawScienceButton = $('<button type="button" class="button"/>');
 
         if (continentStats.agentBlockedDuration > 0) {
             agentsButton.text("Agents blocked (" + continentStats.agentBlockedDuration + ")");
@@ -46,30 +47,42 @@ define(['jquery', './Util'], function($, u) {
         }
 
         if (continentStats.squads > 0) {
-            withdrawButton.text("Withdraw Squadron");
+            withdrawButton.show();
+            withdrawButton.text("Withdraw Squad");
             withdrawButton.click(function() {
                 continentStats.squads--;
                 playerStats.squads++;
                 $(window).trigger("ActionTaken");
             });
         } else {
-            withdrawButton.text("No Squads here");
-            withdrawButton.prop("disabled", true);
+            withdrawButton.hide();
         }
 
         if (continentStats.squadBlockedDuration > 0) {
             squadButton.text("Squads blocked (" + continentStats.squadBlockedDuration + ")");
             squadButton.prop("disabled", true);
         } else if (playerStats.squads <= 0) {
-            squadButton.text("No Squadrons");
+            squadButton.text("No Squads");
             squadButton.prop("disabled", true);
         } else {
-            squadButton.text("Deploy Squadron");
+            squadButton.text("Deploy Squad");
             squadButton.click(function() {
                 continentStats.squads++;
                 playerStats.squads--;
                 $(window).trigger("ActionTaken");
             });
+        }
+
+        if (continentStats.addlScience > 0) {
+            withdrawScienceButton.show();
+            withdrawScienceButton.text("Withdraw Scientist");
+            withdrawScienceButton.click(function() {
+                continentStats.addlScience--;
+                playerStats.science++;
+                $(window).trigger("ActionTaken");
+            });
+        } else {
+            withdrawScienceButton.hide();
         }
 
         if (playerStats.science <= 0) {
@@ -78,16 +91,15 @@ define(['jquery', './Util'], function($, u) {
         } else {
             scientistsButton.text("Send Scientist");
             scientistsButton.click(function() {
-                continentStats.science++;
+                continentStats.addlScience++;
                 playerStats.science--;
                 $(window).trigger("ActionTaken");
             });
         }
         
         elem.append($('<div/>').append(agentsButton));
-        elem.append($('<div/>').append(squadButton));
-        elem.append($('<div/>').append(withdrawButton));
-        elem.append($('<div/>').append(scientistsButton));
+        elem.append($('<div/>').append(squadButton).append(withdrawButton));
+        elem.append($('<div/>').append(scientistsButton).append(withdrawScienceButton));
     }
 
     return ActionDisplay;

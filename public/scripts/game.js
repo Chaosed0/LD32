@@ -123,7 +123,7 @@ require(['jquery', './Util', './Constants',
         /* Modify stats only after we're done calculating war effects */
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
-            stats.strength += Math.floor(u.getRandom(stats.science, stats.science));
+            stats.strength += stats.getEffectiveScience();
             stats.agentBlockedDuration = Math.max(0, stats.agentBlockedDuration-1);
             stats.squadBlockedDuration = Math.max(0, stats.squadBlockedDuration-1);
 

@@ -32,6 +32,10 @@ define(['jquery', './Util'], function($, u) {
             strengthText += ' (+' + stats.squads * 5 + ')';
         }
 
+        if (stats.addlScience > 0) {
+            researchText += ' (+' + stats.addlScience + ')';
+        }
+
         elem.append($('<p/>').text(strengthText));
         elem.append($('<p/>').text(stabilityText));
         elem.append($('<p/>').text(researchText));

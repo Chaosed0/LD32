@@ -8,6 +8,7 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
         this.progress = 0;
         this.hasAgent = false;
         this.squads = 0;
+        this.addlScience = 0;
         this.agentBlockedDuration = 0;
         this.squadBlockedDuration = 0;
         this.wars = [];
@@ -19,6 +20,10 @@ define(['jquery', './Util', './Constants'], function($, u, c) {
 
     ContinentStats.prototype.getEffectiveStrength = function() {
         return this.strength + this.squads * ContinentStats.squadStrength;
+    }
+
+    ContinentStats.prototype.getEffectiveScience = function() {
+        return this.science + this.addlScience;
     }
 
     ContinentStats.prototype.isAtWar = function() {
