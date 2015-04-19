@@ -1,7 +1,7 @@
 
 html, body {
     margin: 0;
-    background-color: #222222;
+    background-color: #222;
     height: 100%;
 }
 
@@ -90,6 +90,30 @@ p {
 #actions {
     width: 100%;
     height: 200px;
+}
+
+.modal {
+    position: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 99999;
+    pointer-events: none;
+}
+
+.modal > div {
+    width: 30%;
+    position: relative;
+    margin: 20% auto;
+    padding: 5px 20px 13px 20px;
+    background: #005969;
+    outline: 2px solid #006979;
+    color: #ddd;
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
 }
 
 progress {

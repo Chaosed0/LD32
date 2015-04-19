@@ -9,7 +9,7 @@ define(['jquery', './Util'], function($, u) {
         this.year = 2034;
         this.log = logElem;
 
-        $(window).bind("NewMonth", function(e, month) {
+        $(window).bind("NewMonthLog", function(e, month) {
             if (month != 0 && month%12 == 0) {
                 ++self.year;
             }

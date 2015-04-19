@@ -77,9 +77,15 @@ require(['jquery', './Util', './GameObj',
 
     var nextMonth = function() {
         month++;
-        $(window).trigger("NewMonth", month);
+        /* We want to log the new month before the new war */
+        $(window).trigger("NewMonthLog", month);
 
+        /* Add progress to the mind control bomb */
         playerStats.progress += playerStats.science;
+        if (playerStats.progress >= 100) {
+            $(window).trigger('Victory', i);
+        }
+
         for (var i = 0; i < continents.length; i++) {
             var stats = continentStats[i];
             var numWars = 0;
@@ -103,28 +109,10 @@ require(['jquery', './Util', './GameObj',
                 ++numWars;
             }
 
-            /* If the country has just fallen, split its assets among the victors */
+            /* If a country has fallen, we lost */
             if (stats.stability <= 0) {
-                var warCount = 0;
-                stats.conqueror = '';
-                for(var j = 0; j < stats.wars.length; j++) {
-                    if (!stats.wars[j]) {
-                        continue;
-                    }
-
-                    if (warCount != 0 && numWars > 2) {
-                        stats.conqueror += ',';
-                    }
-                    /* Figure out whether we should put 'and' in or not */
-                    if (warCount == numWars - 1 && numWars > 1) {
-                        stats.conqueror += ' and';
-                    }
-                    stats.conqueror += ' ' + continents[j];
-                    ++warCount;
-
-                    stats.wars[j] = false;
-                    continentStats[j].wars[i] = false;
-                }
+                stats.conqueror = continents[stats.wars.indexOf(true)];
+                $(window).trigger('Defeat', i);
             }
         }
 
@@ -138,6 +126,8 @@ require(['jquery', './Util', './GameObj',
         if (month != 0 && month % warInterval == 0) {
             newWar();
         }
+
+        $(window).trigger("NewMonth", month);
     }
 
     var mainWidth = $('#map_container').width();
@@ -215,6 +205,21 @@ require(['jquery', './Util', './GameObj',
             var label = labels[i];
             reddenLabel(i);
         }
+    });
+
+    $(window).on('Victory', function(e) {
+        var header = $('<h1/>').text('Victory!').css('text-align', 'center');
+        $('#modal_content').empty();
+        $('#modal_content').append(header);
+        $('#modal').show();
+    });
+
+    $(window).on('Defeat', function(e) {
+        var header = $('<h1/>').text('Defeat.').css('text-align', 'center');
+        $('#modal_content').empty();
+        $('#modal_content').append(header);
+        $('#modal_content').append('<p>Commander, you have failed to live up to our expectations.</p>');
+        $('#modal').show();
     });
 
     var nextMonthButton = GameObj('<button type="button" class="button"/>');
