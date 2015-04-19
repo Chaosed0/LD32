@@ -278,8 +278,8 @@ require(['jquery', './Util', './Constants',
     $('#map_container').append(viewOfferButton);
 
     var viewHelp = GameObj('<button type="button" class="button"/>');
-    viewHelp.text("?");
-    viewHelp.width(25);
+    viewHelp.text("HELP");
+    viewHelp.width(50);
     viewHelp.height(25);
     viewHelp.setPos($(window).width() - viewHelp.width() - 20, 20);
     viewHelp.click(function() { $('#help_modal').show() });
