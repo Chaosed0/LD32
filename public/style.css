@@ -120,12 +120,12 @@ p {
     font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
 }
 
-#help_modal > div {
+.text_modal > div {
     margin: 10% auto;
     text-justify: inter-word;
 }
 
-#help_modal p {
+.text_modal p {
     margin-bottom: 5px;
 }
 

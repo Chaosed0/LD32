@@ -150,7 +150,7 @@ require(['jquery', './Util', './Constants',
         }
         /* If we lost, trigger defeat and don't do offer */
         if (conqueredContinent != null) {
-            $(window).trigger('Defeat', i);
+            $(window).trigger('Defeat', conqueredContinent);
             offer = null;
         }
 
@@ -243,18 +243,12 @@ require(['jquery', './Util', './Constants',
     });
 
     $(window).on('Victory', function(e) {
-        var header = $('<h1/>').text('Victory!').css('text-align', 'center');
-        $('#modal_content').empty();
-        $('#modal_content').append(header);
-        $('#modal').show();
+        $('#victory_modal').show();
     });
 
-    $(window).on('Defeat', function(e) {
-        var header = $('<h1/>').text('Defeat.').css('text-align', 'center');
-        $('#modal_content').empty();
-        $('#modal_content').append(header);
-        $('#modal_content').append('<p>Commander, you have failed to live up to our expectations.</p>');
-        $('#modal').show();
+    $(window).on('Defeat', function(e, index) {
+        $('#defeat_message').text(continents[index] + ' has fallen to ' + continentStats[index].conqueror + '.');
+        $('#defeat_modal').show();
     });
 
     $(window).on('NewWar', function(e, data) {
@@ -300,4 +294,8 @@ require(['jquery', './Util', './Constants',
     for(var i = 0; i < initialWars; i++) {
         newWar();
     }
+
+    /* Show intro */
+    $('#intro_modal').show();
+    $('#hide_intro').click(function() { $('#intro_modal').hide(); });
 });
